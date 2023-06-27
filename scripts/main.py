@@ -20,24 +20,16 @@ def uploadeFile(files,path):
     return info
 
 def runCmd(cmd):
-    sub_stdout = ''
-    p = subprocess.Popen(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-    while True:
-        r = p.stdout.read().decode('gbk')
-        if r:
-            sub_stdout +=r
-        if subprocess.Popen.poll(p) != None and not r:
-            break
-    return sub_stdout
+    p = subprocess.run(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
+    return p.stdout.decode('gbk')
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
-            text = gr.Text("/kaggle")
             text = gr.Text(label="上传路径", value="/kaggle")
             uploader = gr.File(file_count="multiple")
             cmd_text = gr.Text(label="执行命令")
-            label_output = gr.Text()
+            label_output = gr.Text(label="输出")
 
         uploader.change(fn=uploadeFile, inputs=[uploader,text], outputs=[label_output])
         cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
