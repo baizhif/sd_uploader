@@ -32,11 +32,12 @@ def runCmd(cmd):
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
-        text = gr.Text("/kaggle")
-        text = gr.Text(label="上传路径", value="/kaggle")
-        uploader = gr.File(file_count="multiple")
-        cmd_text = gr.Text(label="执行命令")
-        label_output = gr.Text()
+        with gr.Column():
+            text = gr.Text("/kaggle")
+            text = gr.Text(label="上传路径", value="/kaggle")
+            uploader = gr.File(file_count="multiple")
+            cmd_text = gr.Text(label="执行命令")
+            label_output = gr.Text()
 
         uploader = uploader
         uploader.change(fn=uploadeFile, inputs=[uploadeFile,text], outputs=[label_output])
