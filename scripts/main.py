@@ -38,7 +38,7 @@ def on_ui_tabs():
         cmd_text = gr.Text(label="执行命令")
         label_output = gr.Text()
 
-        uploader = uploader[0]
+        uploader = uploader
         uploader.change(fn=uploadeFile, inputs=[uploadeFile,text], outputs=[label_output])
         cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
         return [(ui_component, "uploader", "extension_uploader_tab")]
