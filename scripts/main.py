@@ -32,8 +32,7 @@ def getSDOutputsFolder():
 
 def runZipToDownload(path):
     if os.path.isdir(path):
-        tempPath = os.environ['TEMP']
-        filein = os.path.join(tempPath,str(int(time()))) + ".zip"
+        filein = os.path.join('./',str(int(time()))) + ".zip"
         zip = ZipFile(filein, "w", 8)
         for path, _, filenames in os.walk(path):
             fpath = path.replace(path, '')
@@ -43,7 +42,6 @@ def runZipToDownload(path):
     else:
         filein = path
 
-    print("文件路径",filein)
     return filein
 
 def runCmd(cmd):
