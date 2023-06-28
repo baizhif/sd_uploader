@@ -2,7 +2,6 @@ import gradio as gr
 import os
 import subprocess
 from zipfile import ZipFile
-from time import time
 
 from modules import script_callbacks
 
@@ -34,7 +33,7 @@ def getSDOutputsFolder():
 def runZipToDownload(path):
     path = path.strip()
     if os.path.isdir(path):
-        filein = os.path.join('./',str(int(time()))) + ".zip"
+        filein = os.path.join('./',os.path.basename(path) + ".zip")
         zip = ZipFile(filein, "w", 8)
         for path, _, filenames in os.walk(path):
             fpath = path.replace(path, '')
