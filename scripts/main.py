@@ -40,6 +40,8 @@ def runZipToDownload(path):
                 zip.write(os.path.join(path, filename), os.path.join(fpath, filename))
         zip.close()
     else:
+        if os.path.exists(path) is False:
+            raise FileNotFoundError
         filein = path
     return filein
 
