@@ -41,13 +41,14 @@ def runZipToDownload(path):
         zip.close()
     else:
         filein = path
-
     return filein
 
 def runCmd(cmd):
     p = subprocess.run(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
-    return p.stdout.decode('gbk')
-
+    try:
+        return p.stdout.decode('gbk')
+    except UnicodeDecodeError:
+        return p.stdout.decode('utf-8')
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
