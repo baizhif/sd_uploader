@@ -42,6 +42,8 @@ def runZipToDownload(path):
         zip.close()
     else:
         filein = path
+
+    print("文件路径",filein)
     return filein
 
 def runCmd(cmd):
