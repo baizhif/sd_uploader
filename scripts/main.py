@@ -7,6 +7,7 @@ from time import time
 from modules import script_callbacks
 
 def uploadeFile(files,path):
+    path = path.strip()
     if files is None:
         return
     if not os.path.exists(path):
@@ -31,6 +32,7 @@ def getSDOutputsFolder():
         return SDPath
 
 def runZipToDownload(path):
+    path = path.strip()
     if os.path.isdir(path):
         filein = os.path.join('./',str(int(time()))) + ".zip"
         zip = ZipFile(filein, "w", 8)
@@ -46,7 +48,7 @@ def runZipToDownload(path):
     return filein
 
 def runCmd(cmd):
-    p = subprocess.run(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
+    p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
     try:
         return p.stdout.decode('gbk')
     except UnicodeDecodeError:
