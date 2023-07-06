@@ -56,7 +56,7 @@ def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
             text = gr.Text(label="上传路径", value="/kaggle")
-            uploader = gr.File(file_count="multiple")
+            uploader = gr.File(file_count="multiple",elem_id="uploader_file_input")
             cmd_text = gr.Text(label="执行命令")
             download_path_Text = gr.Text(label=f"输入下载的目录{getSDOutputsFolder()}")
 
