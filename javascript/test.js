@@ -1,11 +1,15 @@
-var uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input");
+document.onreadystatechange(
+    function tests() {
+        const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input")
 
-uploader_file_input.onchange = evt => {
-    files = evt.target.files;
-    if (files.length === 0) {
-      return
+        uploader_file_input.onchange = evt => {
+            files = evt.target.files;
+            if (files.length === 0) {
+            return
+            }
+            else {
+                console.log(files);
+            }
     }
-    else {
-        console.log(files);
-    }
-  }
+}
+)
