@@ -1,4 +1,4 @@
-document.onreadystatechange(
+document.onreadystatechange = 
     function tests() {
         const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input")
 
@@ -12,4 +12,3 @@ document.onreadystatechange(
             }
     }
 }
-)
