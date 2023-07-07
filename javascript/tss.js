@@ -1,11 +1,10 @@
 
-let uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
+let uploader_ws_url = 'ws://'+ window.location['host'] + '/ws'
 
 uploader_ws = ''
 
-count_div = document.createElement("div");
-console.log(count_div);
-document.body.appendChild(document.createElement("div"));
+let count_div = document.createElement("div")
+console.log(document.getElementsByTagName('body'),1);
 
 function getPublicIp(){
     var httpRequest = new XMLHttpRequest();
@@ -29,6 +28,8 @@ function new_uploader_ws(client_url) {
         getPublicIp();
     }
     uploader_ws.onmessage = function setCount(evt) {
+        console.log(document.getElementsByTagName('body'),2);
+        document.body.appendChild(count_div)
         count_div.innerText(evt.data)
     }
 }
