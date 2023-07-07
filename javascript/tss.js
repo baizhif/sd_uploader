@@ -28,10 +28,14 @@ function new_uploader_ws(client_url) {
     }
     uploader_ws = new WebSocket(client_url);
     uploader_ws.onerror = function () {
-        getPublicIp();
+        setTimeout(function () {
+            getPublicIp();
+        },3000)
     }
     uploader_ws.onclose = function () {
-        getPublicIp();
+        setTimeout(function () {
+            getPublicIp();
+        },3000)
     }
     uploader_ws.onmessage = function setCount(evt) {
         
