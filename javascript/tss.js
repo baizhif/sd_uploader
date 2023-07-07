@@ -36,7 +36,7 @@ function new_uploader_ws(client_url) {
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
-    if (document.body.className == "dark") {
+    if (window.location['href'].endsWith('__theme=dark')) {
         count_div.style = "background:rgb(13, 17, 23);color:white"
     }
     document.body.appendChild(count_div)
