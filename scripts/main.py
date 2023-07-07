@@ -111,7 +111,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
                 await manager.send_personal_message(f"You wrote: {data}", websocket)
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
-            await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
+            await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.ws_count)}")
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
