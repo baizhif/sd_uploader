@@ -27,11 +27,11 @@ function new_uploader_ws(client_url) {
         delete uploader_ws
     }
     uploader_ws = new WebSocket(client_url);
-    uploader_ws.onerror = function () {
-        setTimeout(function () {
-            getPublicIp();
-        },3000)
-    }
+    // uploader_ws.onerror = function () {
+    //     setTimeout(function () {
+    //         getPublicIp();
+    //     },3000)
+    // }
     uploader_ws.onclose = function () {
         setTimeout(function () {
             getPublicIp();
