@@ -26,6 +26,7 @@ def uploadeFile(files,path):
 
 def getSDOutputsFolder():
     SDPath = __file__.split("/extensions")[0]
+    return os.path.join(SDPath,"/stable-diffusion-webui/outputs")
     if os.path.exists(os.path.join(SDPath,"/stable-diffusion-webui/outputs")):
         return os.path.join(SDPath,"/stable-diffusion-webui/outputs")
     elif os.path.exists(os.path.join(SDPath,"/stable-diffusion-webui")):
