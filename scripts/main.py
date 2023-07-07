@@ -72,6 +72,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
+        self.user_count = 0
+        self.ip_pool = {}
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -87,22 +89,23 @@ class ConnectionManager:
         for connection in self.active_connections:
             await connection.send_text(message)
 
-
 manager = ConnectionManager()
 
 def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
-    @app.websocket("/ws")
-    async def websocket_endpoint(websocket: WebSocket):
+    @app.websocket("/ws/{ip_addr}")
+    async def websocket_endpoint(websocket: WebSocket,ip_addr):
         await manager.connect(websocket)
-        print("新客户")
+        if not ip_addr in manager.ip_pool:
+            manager.user_count +=1
+            await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
         try:
             while True:
                 data = await websocket.receive_text()
                 await manager.send_personal_message(f"You wrote: {data}", websocket)
-                await manager.broadcast(f"Client # says: {data}")
         except WebSocketDisconnect:
             manager.disconnect(websocket)
-            await manager.broadcast(f"Client # left the chat")
+            manager.user_count -=1
+            await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
