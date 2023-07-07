@@ -91,8 +91,6 @@ class ConnectionManager:
     async def send_personal_message(self, message: str, websocket: WebSocket):
         if websocket.client_state == 1:
             await websocket.send_text(message)
-        else:
-            print(6)
 
     async def broadcast(self, message: str):
         for connection in (ws for wss in self.ip_pool.values() for ws in wss):
@@ -112,6 +110,8 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
+        except RuntimeError as e:
+            print(e)
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
