@@ -24,9 +24,13 @@ function getPublicIp(){
 function new_uploader_ws(client_url) {
     if (uploader_ws & !uploader_ws.CLOSED) {
         uploader_ws.close()
+        delete uploader_ws
     }
     uploader_ws = new WebSocket(client_url);
     uploader_ws.onerror = function () {
+        getPublicIp();
+    }
+    uploader_ws.onclose = function () {
         getPublicIp();
     }
     uploader_ws.onmessage = function setCount(evt) {
