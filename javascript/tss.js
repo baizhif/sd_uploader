@@ -31,12 +31,14 @@ function new_uploader_ws(client_url) {
     }
     uploader_ws.onmessage = function setCount(evt) {
         
-        if (document.body.className == "dark") {
-            count_div.style = "background:rgb(13, 17, 23);color:white"
-        }
-        document.body.appendChild(count_div)
         count_div.innerText = evt.data
     }
 }
 
-getPublicIp();
+document.addEventListener('DOMContentLoaded', (event) => {
+    if (document.body.className == "dark") {
+        count_div.style = "background:rgb(13, 17, 23);color:white"
+    }
+    document.body.appendChild(count_div)
+    getPublicIp();
+});
