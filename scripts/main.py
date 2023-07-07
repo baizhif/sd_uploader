@@ -7,6 +7,8 @@ from fastapi import FastAPI
 from modules import script_callbacks
 
 def uploadeFile(files,path):
+    if path.startswith("/kaggle/working"):
+        return "你想干嘛?"
     path = path.strip()
     if files is None:
         return
@@ -47,25 +49,25 @@ def runZipToDownload(path):
         filein = path
     return filein
 
-def runCmd(cmd):
-    p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
-    try:
-        return p.stdout.decode('gbk')
-    except UnicodeDecodeError:
-        return p.stdout.decode('utf-8')
+# def runCmd(cmd):
+#     p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
+#     try:
+#         return p.stdout.decode('gbk')
+#     except UnicodeDecodeError:
+#         return p.stdout.decode('utf-8')
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
             text = gr.Text(label="上传路径", value="/kaggle")
             uploader = gr.File(file_count="multiple",elem_id="uploader_file_input")
-            cmd_text = gr.Text(label="执行命令")
+            # cmd_text = gr.Text(label="执行命令")
             download_path_Text = gr.Text(label=f"输入下载的目录{getSDOutputsFolder()}")
 
             label_output = gr.Text(label="输出")
             fileOut = gr.File(label="文件输出")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
         uploader.change(fn=uploadeFile, inputs=[uploader,text], outputs=[label_output])
-        cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
+        # cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
         return [(ui_component, "uploader", "extension_uploader_tab")]
     
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
