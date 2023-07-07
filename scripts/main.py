@@ -104,7 +104,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.websocket("/ws/{ip_addr}")
     async def websocket_endpoint(websocket: WebSocket,ip_addr:str):
         await manager.connect(websocket, ip_addr)
-        await manager.broadcast(f"ip_count:{manager.user_count}\tws_count:{manager.ws_count}")
+        await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
         try:
             while True:
                 data = await websocket.receive_text()
