@@ -7,9 +7,6 @@ if (window.location.protocol == "https:") {
 uploader_ws = ''
 
 let count_div = document.createElement("div")
-console.log(typeof count_div);
-bbbb = document.getElementsByTagName('body')
-console.log(document.getElementsByTagName('body'),1);
 
 function getPublicIp(){
     var httpRequest = new XMLHttpRequest();
@@ -33,8 +30,6 @@ function new_uploader_ws(client_url) {
         getPublicIp();
     }
     uploader_ws.onmessage = function setCount(evt) {
-        console.log(document.getElementsByTagName('body'),2);
-        console.log(typeof count_div);
         document.body.appendChild(count_div)
         count_div.innerText = evt.data
     }
