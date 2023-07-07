@@ -33,7 +33,7 @@ function new_uploader_ws(client_url) {
         console.log(document.getElementsByTagName('body'),2);
         console.log(typeof count_div);
         document.body.appendChild(count_div)
-        count_div.innerText(evt.data)
+        count_div.innerText = evt.data
     }
 }
 
