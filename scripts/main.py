@@ -27,12 +27,6 @@ def uploadeFile(files,path):
 def getSDOutputsFolder():
     SDPath = __file__.split("/extensions")[0]
     return os.path.join(SDPath,"/stable-diffusion-webui/outputs")
-    if os.path.exists(os.path.join(SDPath,"/stable-diffusion-webui/outputs")):
-        return os.path.join(SDPath,"/stable-diffusion-webui/outputs")
-    elif os.path.exists(os.path.join(SDPath,"/stable-diffusion-webui")):
-        return os.path.join(SDPath,"/stable-diffusion-webui")
-    else:
-        return SDPath
 
 def runZipToDownload(path):
     path = path.strip()
@@ -50,25 +44,25 @@ def runZipToDownload(path):
         filein = path
     return filein
 
-# def runCmd(cmd):
-#     p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
-#     try:
-#         return p.stdout.decode('gbk')
-#     except UnicodeDecodeError:
-#         return p.stdout.decode('utf-8')
+def runCmd(cmd):
+    p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
+    try:
+        return p.stdout.decode('gbk')
+    except UnicodeDecodeError:
+        return p.stdout.decode('utf-8')
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
             text = gr.Text(label="上传路径", value="/kaggle")
             uploader = gr.File(file_count="multiple",elem_id="uploader_file_input")
-            # cmd_text = gr.Text(label="执行命令")
+            cmd_text = gr.Text(label="执行命令")
             download_path_Text = gr.Text(label=f"输入下载的目录{getSDOutputsFolder()}")
 
             label_output = gr.Text(label="输出")
             fileOut = gr.File(label="文件输出")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
         uploader.change(fn=uploadeFile, inputs=[uploader,text], outputs=[label_output])
-        # cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
+        cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
         return [(ui_component, "uploader", "extension_uploader_tab")]
     
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
@@ -95,7 +89,10 @@ class ConnectionManager:
         self.ws_count -= 1
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
-        await websocket.send_text(message)
+        if websocket.client_state == 1:
+            await websocket.send_text(message)
+        else:
+            print(6)
 
     async def broadcast(self, message: str):
         for connection in (ws for wss in self.ip_pool.values() for ws in wss):
