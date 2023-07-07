@@ -16,7 +16,7 @@ function getPublicIp(){
         var json = httpRequest.responseText;
         let data=JSON.parse(json);
         public_ip = data.ip
-        var client_url = uploader_ws_url + "/"+ public_ip.replace(".","_")
+        var client_url = uploader_ws_url + "/"+ public_ip.replace(/\./g,'_');
         new_uploader_ws(client_url)
     }
 }
