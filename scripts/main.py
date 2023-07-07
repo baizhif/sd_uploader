@@ -73,7 +73,7 @@ class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
         self.user_count = 0
-        self.ip_pool = {}
+        self.ip_pool = set()
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
@@ -96,8 +96,8 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     async def websocket_endpoint(websocket: WebSocket,ip_addr:str):
         await manager.connect(websocket)
         if not ip_addr in manager.ip_pool:
-            print(ip_addr)
             manager.user_count +=1
+            manager.ip_pool.add(ip_addr)
             await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
         try:
             while True:
