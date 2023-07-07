@@ -3,8 +3,9 @@ let uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
 
 uploader_ws = ''
 
-let count_div = document.createElement("div")
-document.body.appendChild(count_div)
+count_div = document.createElement("div");
+console.log(count_div);
+document.body.appendChild(document.createElement("div"));
 
 function getPublicIp(){
     var httpRequest = new XMLHttpRequest();
