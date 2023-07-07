@@ -93,9 +93,10 @@ manager = ConnectionManager()
 
 def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.websocket("/ws/{ip_addr}")
-    async def websocket_endpoint(websocket: WebSocket,ip_addr):
+    async def websocket_endpoint(websocket: WebSocket,ip_addr:str):
         await manager.connect(websocket)
         if not ip_addr in manager.ip_pool:
+            print(ip_addr)
             manager.user_count +=1
             await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
         try:
