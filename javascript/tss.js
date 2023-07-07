@@ -1,5 +1,8 @@
-
-let uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
+if (window.location.protocol == "https:") {
+    let uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
+} else {
+    let uploader_ws_url = 'ws://'+ window.location['host'] + '/ws'
+}
 
 uploader_ws = ''
 
