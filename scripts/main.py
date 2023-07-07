@@ -71,22 +71,31 @@ def on_ui_tabs():
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 class ConnectionManager:
     def __init__(self):
-        self.active_connections: list[WebSocket] = []
         self.user_count = 0
-        self.ip_pool = set()
+        self.ws_count = 0
+        self.ip_pool = dict()
 
-    async def connect(self, websocket: WebSocket):
+    async def connect(self, websocket: WebSocket, ip_addr):
         await websocket.accept()
-        self.active_connections.append(websocket)
+        if ip_addr in self.ip_pool:
+            self.ip_pool[ip_addr].append(websocket)
+        else:
+            self.ip_pool[ip_addr] = [websocket]
+            self.user_count +=1
+        self.ws_count +=1
 
-    def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+    def disconnect(self, websocket: WebSocket, ip_addr):
+        self.ip_pool[ip_addr].remove(websocket)
+        if self.ip_pool[ip_addr] == []:
+            self.ip_pool.pop(ip_addr)
+            self.user_count -= 1
+        self.ws_count -= 1
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
         await websocket.send_text(message)
 
     async def broadcast(self, message: str):
-        for connection in self.active_connections:
+        for connection in (ws for wss in self.ip_pool.values() for ws in wss):
             await connection.send_text(message)
 
 manager = ConnectionManager()
@@ -94,18 +103,14 @@ manager = ConnectionManager()
 def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.websocket("/ws/{ip_addr}")
     async def websocket_endpoint(websocket: WebSocket,ip_addr:str):
-        await manager.connect(websocket)
-        if not ip_addr in manager.ip_pool:
-            manager.user_count +=1
-            manager.ip_pool.add(ip_addr)
-            await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
+        await manager.connect(websocket, ip_addr)
+        await manager.broadcast(f"ip_count:{manager.user_count}\tws_count:{manager.ws_count}")
         try:
             while True:
                 data = await websocket.receive_text()
                 await manager.send_personal_message(f"You wrote: {data}", websocket)
         except WebSocketDisconnect:
-            manager.disconnect(websocket)
-            manager.user_count -=1
+            manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"ip_count:{manager.user_count}\nws_count:{len(manager.active_connections)}")
 
 
