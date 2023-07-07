@@ -1,9 +1,11 @@
 
-let uploader_ws_url = 'ws://'+ window.location['host'] + '/ws'
+let uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
 
 uploader_ws = ''
 
 let count_div = document.createElement("div")
+console.log(typeof count_div);
+bbbb = document.getElementsByTagName('body')
 console.log(document.getElementsByTagName('body'),1);
 
 function getPublicIp(){
@@ -29,6 +31,7 @@ function new_uploader_ws(client_url) {
     }
     uploader_ws.onmessage = function setCount(evt) {
         console.log(document.getElementsByTagName('body'),2);
+        console.log(typeof count_div);
         document.body.appendChild(count_div)
         count_div.innerText(evt.data)
     }
