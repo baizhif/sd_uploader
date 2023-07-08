@@ -51,6 +51,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
     getPublicIp();
     setTimeout(function () {
         const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input");
+        uploader_file_input.onchange = function(evt) {
+            console.log(evt);
+        }
         console.log(uploader_file_input);
     },1000*50);
 });
