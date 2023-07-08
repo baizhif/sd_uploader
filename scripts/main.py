@@ -24,10 +24,6 @@ def uploadeFile(files,path):
             info += file.name + "->" + os.path.join(path,os.path.basename(file.name)) + '\n'
     return info
 
-def getSDOutputsFolder():
-    SDPath = __file__.split("/extensions")[0]
-    return os.path.join(SDPath,"/stable-diffusion-webui/outputs")
-
 def runZipToDownload(path):
     path = path.strip()
     if os.path.isdir(path):
@@ -56,16 +52,17 @@ def on_ui_tabs():
             text = gr.Text(label="上传路径", value="/kaggle")
             uploader = gr.File(file_count="multiple",elem_id="uploader_file_input")
             cmd_text = gr.Text(label="执行命令")
-            download_path_Text = gr.Text(label=f"输入下载的目录{getSDOutputsFolder()}")
+            download_path_Text = gr.Text(label="输入下载的目录如:\n/kaggle/stable-diffusion-webui/outputs")
 
             label_output = gr.Text(label="输出")
             fileOut = gr.File(label="文件输出")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
         uploader.change(fn=uploadeFile, inputs=[uploader,text], outputs=[label_output])
         cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
-        return [(ui_component, "uploader", "extension_uploader_tab")]
+        return [(ui_component, "uploader", "extension_uploader")]
     
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect,UploadFile,Header,List,File
+from typing import Optional
 class ConnectionManager:
     def __init__(self):
         self.user_count = 0
@@ -110,8 +107,14 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
-        except RuntimeError as e:
-            print(e)
+    @app.route("/uploader_tab/api/upload",methods=["POST"])
+    async def filesUploadProcess(files: List[UploadFile] = File(...),path:Optional[str]=Header(None)):
+        for file in files:
+            with open(os.psth.join(path,file.filename)) as f:
+                for i in iter(lambda:file.file.read(1024*1024*10),b''):
+                    f.write(i)
+            f.close()
+        return {"succeed":[file.filename for file in files]}
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
