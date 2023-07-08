@@ -22,24 +22,28 @@ function getPublicIp(){
 }
 
 function new_uploader_ws(client_url) {
-    if (uploader_ws & !uploader_ws.CLOSED) {
-        uploader_ws.close()
-        delete uploader_ws
-    }
-    uploader_ws = new WebSocket(client_url);
-    // uploader_ws.onerror = function () {
-    //     setTimeout(function () {
-    //         getPublicIp();
-    //     },3000)
+    // if (uploader_ws & !uploader_ws.CLOSED) {
+    //     uploader_ws.close()
+    //     delete uploader_ws
     // }
+    uploader_ws = new WebSocket(client_url);
+    uploader_ws.onerror = function () {
+        uploader_ws.close();
+        delete uploader_ws;
+        setTimeout(function () {
+            getPublicIp();
+        },3000)
+    }
     uploader_ws.onclose = function () {
+        uploader_ws.close();
+        delete uploader_ws;
         setTimeout(function () {
             getPublicIp();
         },3000)
     }
     uploader_ws.onmessage = function setCount(evt) {
         
-        count_div.innerText = evt.data
+        count_div.innerText = evt.data;
     }
 }
 
@@ -50,7 +54,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
     document.body.appendChild(count_div)
     getPublicIp();
     setTimeout(function () {
-        const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input");
+        const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input")[0];
         uploader_file_input.onchange = function(evt) {
             console.log(evt);
         }
