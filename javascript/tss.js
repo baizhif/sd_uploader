@@ -47,12 +47,55 @@ function new_uploader_ws(client_url) {
     }
 }
 
+function uploaderCraeteElementsAndWait(){
+    uploade_path_text = document.createElement("input");
+    const uploader_file_label = document.createElement("label");
+    const uploader_file_input = document.createElement("input");
+
+    uploade_path_text.type = "text";
+    uploade_path_text.value = "/kaggle"
+    uploader_file_input.type = "file";
+    uploader_file_input.multiple = "multiple";
+    uploader_file_input.id = "uploader_file_input";
+    uploader_file_label.setAttribute("for","uploader_file_input");
+
+    uploader_file_input.style.display = "none";
+    uploader_file_label.style.backgroundColor = "blue";
+    // uploader_file_label.style.border = "radius 4px";
+    uploader_file_label.style.cursor = "pointer";
+    uploader_file_input.onchange = function(evt) {
+        if (evt.target.files.length !== 0) {
+            let xhr = new XMLHttpRequest();
+            let fd = new FormData();
+            for (let i= 0; i<evt.target.files.length; i++) {
+                fd.append("file",evt.target.files[i]);
+            }
+            xhr.open("post","/uploader_tab/api/upload",true);
+            xhr.setRequestHeader("path") = uploade_path_text.value;
+            uploader_file_label.disabled = true;
+            xhr.send(fd);
+            xhr.onload = function() {
+                uploader_file_label.disabled = false;
+            }
+        }
+    }
+
+
+    setTimeout(function() {
+        const uploader_tab = document.getElementById("extension_uploader");
+        document.insertBefore(uploader_file_input,uploader_tab.children[0]);
+        document.insertBefore(uploader_file_label,uploader_tab.children[0]);
+        document.insertBefore(uploade_path_text,uploader_tab.children[0]);
+    },1000*50);
+}
+
 document.addEventListener('DOMContentLoaded', (event) => {
     if (window.location['href'].endsWith('__theme=dark')) {
         count_div.style = "background:rgb(13, 17, 23);color:white"
     }
     document.body.appendChild(count_div)
     getPublicIp();
+    uploaderCraeteElementsAndWait();
     setTimeout(function () {
         const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input")[0];
         uploader_file_input.onchange = function(evt) {
