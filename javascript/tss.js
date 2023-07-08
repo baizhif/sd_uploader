@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
     }
     document.body.appendChild(count_div)
     getPublicIp();
-    const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input");
-    console.log(uploader_file_input);
+    setTimeout(function () {
+        const uploader_file_input = document.getElementById("uploader_file_input").getElementsByTagName("input");
+        console.log(uploader_file_input);
+    },1000*50);
 });
