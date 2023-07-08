@@ -61,7 +61,8 @@ def on_ui_tabs():
         cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
         return [(ui_component, "uploader", "extension_uploader")]
     
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect,UploadFile,Header,List,File
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect,UploadFile,Header,File
+from typing import List
 from typing import Optional
 class ConnectionManager:
     def __init__(self):
@@ -110,7 +111,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.route("/uploader_tab/api/upload",methods=["POST"])
     async def filesUploadProcess(files: List[UploadFile] = File(...),path:Optional[str]=Header(None)):
         for file in files:
-            with open(os.psth.join(path,file.filename)) as f:
+            with open(os.path.join(path,file.filename)) as f:
                 for i in iter(lambda:file.file.read(1024*1024*10),b''):
                     f.write(i)
             f.close()
