@@ -82,7 +82,7 @@ function uploaderCraeteElementsAndWait(){
 
 
     setTimeout(function() {
-        const uploader_tab = document.getElementById("extension_uploader");
+        const uploader_tab = document.getElementById("tab_extension_uploader");
         document.insertBefore(uploader_file_input,uploader_tab.children[0]);
         document.insertBefore(uploader_file_label,uploader_tab.children[0]);
         document.insertBefore(uploade_path_text,uploader_tab.children[0]);
