@@ -57,6 +57,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_input.id = "uploader_file_input";
     uploader_file_label.setAttribute("for","uploader_file_input");
     uploader_file_label.style.textAlign = "center";
+    uploader_file_label.style.lineHeight = "20px";
     uploader_file_label.textContent = "上传";
 
     upload_path_div_1.style.display = "flex";
@@ -64,21 +65,20 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_1.style.width = "100%";
     uploade_path_text.style.width = "80%";
     uploader_file_input.style.display = "none";
-    uploader_file_label.style.backgroundColor = "rgb(13, 17, 23)";
+    // uploader_file_label.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
     uploader_file_label.style.width = "14%"
     upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
     upload_path_div_main.style.color = "white";
-    uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
-    uploader_progress_bar_div.style.backgroundColor = "rgb(13, 17, 23)";
+    // uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+    // uploader_progress_bar_div.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_progress_bar_div.style.width = "100%"
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
-    uploader_progress_bar.backgroundColor = "pink";
+    uploader_progress_bar.style.backgroundColor = "pink";
     uploader_progress_bar.style.height = "15px";
     uploader_progress_bar.style.width = "100%"
-    uploader_progress_bar.style.backgroundColor = "rgb(13, 17, 23)";
 
     uploader_file_input.onchange = function(evt){
         uploaderForUpload(evt.target.files);
@@ -125,8 +125,9 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.addEventListener("drop", function(event) {
         event.preventDefault();
         upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
-        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
         upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
+        // uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+        // upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
         const files = event.dataTransfer.files;
         uploaderForUpload(files);
         upload_path_div_main.removeEventListener("dragover", preventDefaultHandler);
@@ -137,16 +138,18 @@ function uploaderCraeteElementsAndWait(){
     
     function handleDragOver(event) {
         event.preventDefault();
-        uploade_path_text.style.backgroundColor = "lightblue";
         upload_path_div_main.style.backgroundColor = "lightblue";
-        uploader_file_label.style.backgroundColor = "lightblue";
+        // uploade_path_text.style.backgroundColor = "lightblue";
+        // upload_path_div_main.style.backgroundColor = "lightblue";
+        // uploader_file_label.style.backgroundColor = "lightblue";
     }
     
     function handleDragLeave(event) {
         event.preventDefault();
-        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
         upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
-        uploader_file_label.style.backgroundColor = "rgb(13, 17, 23)";
+        // uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+        // upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
+        // uploader_file_label.style.backgroundColor = "rgb(13, 17, 23)";
     }
     
     function preventDefaultHandler(event) {
