@@ -60,7 +60,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.textContent = "上传";
 
     upload_path_div_1.style.display = "flex";
-    upload_path_div.style.justifyContent = "space-between";
+    upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
     uploade_path_text.style.width = "80%";
     uploader_file_input.style.display = "none";
