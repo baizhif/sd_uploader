@@ -109,8 +109,9 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
     @app.post("/uploader_tab/api/upload")
     async def filesUploadProcess(request: Request,files: List[UploadFile] = File(...)):
-        path = request.scope.get("path")
-        print(files,path)
+        path = request.scope.get("upload_path")
+        if os.path.exists(path) is False:
+            os.makedirs(path)
         for file in files:
             with open(os.path.join(path,file.filename),"wb") as f:
                 for chunk in iter(lambda:file.file.read(1024*1024*10),b''):
