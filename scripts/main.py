@@ -27,6 +27,7 @@ def runCmd(cmd):
     if cmd.startswith("cd"):
         if os.path.isdir(cmd[2:].strip()):
             os.chdir(cmd[2:].strip())
+            return f"wkdir{cmd[2:].strip()}"
         else:
             return "the " + cmd[2:].strip() + " dir not found! check your input."
     p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
