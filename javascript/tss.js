@@ -83,7 +83,7 @@ function uploaderCreateElementsAndWait() {
     uploader_tab.insertBefore(uploader_file_input, uploader_tab.children[0]);
     uploader_tab.insertBefore(uploader_file_label, uploader_tab.children[0]);
     uploader_tab.insertBefore(uploade_path_text, uploader_tab.children[0]);
-  }, 5000);
+  }, 1000*50);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
