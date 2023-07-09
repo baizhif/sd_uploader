@@ -74,6 +74,9 @@ function uploaderCraeteElementsAndWait(){
     uploader_progress_bar_div.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_progress_bar_div.style.width = "100%"
     uploader_progress_bar_div.style.display = "none";
+    uploader_progress_bar.style.width = "50%";
+    uploader_progress_bar.style.height = "15px";
+    uploader_progress_bar.style.backgroundColor = "rgb(13, 17, 23)";
 
     uploader_file_input.onchange = function(evt){
         uploaderForUpload(evt.target.files);
