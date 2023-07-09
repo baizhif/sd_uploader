@@ -97,7 +97,6 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.post("/uploader_tab/api/upload")
     async def filesUploadProcess(request: Request,files: List[UploadFile] = File(...)):
         path = request.headers.get("upload_path")
-        print(path)
         if os.path.exists(path) is False:
             os.makedirs(path)
         for file in files:
