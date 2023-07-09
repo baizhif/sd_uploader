@@ -65,6 +65,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.backgroundColor = "blue";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
+    uploade_path_div.style.width = "100%"
     uploade_path_div.style.backgroundColor = "rgb(13, 17, 23)";
     uploade_path_div.style.color = "white";
     uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
@@ -77,7 +78,7 @@ function uploaderCraeteElementsAndWait(){
                 fd.append("files",evt.target.files[i]);
             }
             xhr.open("post","/uploader_tab/api/upload",true);
-            xhr.setRequestHeader("path",uploade_path_text.value);
+            xhr.setRequestHeader("upload_path",uploade_path_text.value);
             uploader_file_label.disabled = true;
             xhr.send(fd);
             xhr.onload = function() {
