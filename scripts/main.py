@@ -107,7 +107,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
-    @app.post("/uploader_tab/api/upload",methods=["POST"])
+    @app.post("/uploader_tab/api/upload")
     async def filesUploadProcess(files: List[UploadFile], path: Optional[str]):
         print(files,path)
         for file in files:
