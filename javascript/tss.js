@@ -105,6 +105,7 @@ function uploaderCraeteElementsAndWait(){
                 uploader_progress_bar.value = 0;
             };
             xhr.upload.onprogress = function(event) {
+                console.log(event.lengthComputable);
                 if (event.lengthComputable) {
                   const progress = (event.loaded / event.total) * 100;
                   uploader_progress_bar.value = progress; // 更新进度条的值
