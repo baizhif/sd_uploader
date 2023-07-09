@@ -76,6 +76,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
     uploader_progress_bar.style.height = "15px";
+    uploader_progress_bar.width = "100%"
     uploader_progress_bar.style.backgroundColor = "rgb(13, 17, 23)";
 
     uploader_file_input.onchange = function(evt){
@@ -102,7 +103,7 @@ function uploaderCraeteElementsAndWait(){
             // 处理上传进度
             xhr.upload.onprogress = function (event) {
                 if (event.lengthComputable) {
-                    const progress = (event.loaded / event.total) * 100;
+                    const progress = (event.loaded / event.total);
                     uploader_progress_bar.value = progress; // 更新进度条的值
                 }
             };
