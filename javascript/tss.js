@@ -91,26 +91,31 @@ function uploaderCraeteElementsAndWait(){
         if (files.length !== 0) {
             let xhr = new XMLHttpRequest();
             let fd = new FormData();
-            for (let i= 0; i<files.length; i++) {
-                fd.append("files",files[i]);
+            for (let i = 0; i < files.length; i++) {
+                fd.append("files", files[i]);
             }
-            xhr.open("post","/uploader_tab/api/upload",true);
-            xhr.setRequestHeader("upload_path",uploade_path_text.value);
+            xhr.open("post", "/uploader_tab/api/upload", true);
+            xhr.setRequestHeader("upload_path", uploade_path_text.value);
             uploader_file_label.disabled = true;
             uploader_progress_bar_div.style.display = "block";
-            xhr.send(fd);
-            xhr.onload = function() {
-                uploader_file_label.disabled = false;
-                uploader_progress_bar_div.style.display = "none";
-                uploader_progress_bar.value = 0;
-            };
-            xhr.upload.onprogress = function(event) {
-                console.log(event.lengthComputable);
+    
+            // 处理上传进度
+            xhr.upload.onprogress = function (event) {
                 if (event.lengthComputable) {
-                  const progress = (event.loaded / event.total) * 100;
-                  uploader_progress_bar.value = progress; // 更新进度条的值
+                    const progress = (event.loaded / event.total) * 100;
+                    uploader_progress_bar.value = progress; // 更新进度条的值
                 }
-              };
+            };
+    
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    uploader_file_label.disabled = false;
+                    uploader_progress_bar_div.style.display = "none";
+                    uploader_progress_bar.value = 0;
+                }
+            };
+    
+            xhr.send(fd);
         }
     }
 
