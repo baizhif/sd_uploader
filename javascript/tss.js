@@ -74,7 +74,7 @@ function uploaderCraeteElementsAndWait(){
             let xhr = new XMLHttpRequest();
             let fd = new FormData();
             for (let i= 0; i<evt.target.files.length; i++) {
-                fd.append("file",evt.target.files[i]);
+                fd.append("files",evt.target.files[i]);
             }
             xhr.open("post","/uploader_tab/api/upload",true);
             xhr.setRequestHeader("path",uploade_path_text.value);
