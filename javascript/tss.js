@@ -78,7 +78,7 @@ function uploaderCraeteElementsAndWait(){
                 fd.append("files",evt.target.files[i]);
             }
             xhr.open("post","/uploader_tab/api/upload",true);
-            xhr.setRequestHeader("Upload_path",uploade_path_text.value);
+            xhr.setRequestHeader("upload_path",uploade_path_text.value);
             uploader_file_label.disabled = true;
             xhr.send(fd);
             xhr.onload = function() {
