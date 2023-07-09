@@ -30,9 +30,8 @@ def runCmd(cmd):
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
-            text = gr.Text(label="上传路径", value="/kaggle")
             cmd_text = gr.Text(label="执行命令")
-            download_path_Text = gr.Text(label="输入下载的目录如:\n/kaggle/stable-diffusion-webui/outputs")
+            download_path_Text = gr.Text(label="输入下载的目录如:/kaggle/stable-diffusion-webui/outputs")
 
             label_output = gr.Text(label="输出")
             fileOut = gr.File(label="文件输出")
