@@ -94,6 +94,7 @@ function uploaderCraeteElementsAndWait(){
             xhr.open("post","/uploader_tab/api/upload",true);
             xhr.setRequestHeader("upload_path",uploade_path_text.value);
             uploader_file_label.disabled = true;
+            uploader_progress_bar_div.style.display = "block";
             xhr.send(fd);
             xhr.onload = function() {
                 uploader_file_label.disabled = false;
