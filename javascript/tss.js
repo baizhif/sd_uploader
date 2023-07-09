@@ -59,17 +59,16 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_1.style.textAlign = "center";
     uploader_file_label.style.marginLeft = "auto";
     upload_path_div_1.style.marginRight = "auto";
-    uploader_file_label.style.lineHeight = "20px";
     uploader_file_label.textContent = "上传";
 
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
-    uploade_path_text.style.width = "80%";
+    uploade_path_text.style.width = "95%";
     uploader_file_input.style.display = "none";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
-    uploader_file_label.style.width = "14%"
+    uploader_file_label.style.width = "5%"
     upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
     upload_path_div_main.style.color = "white";
     uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
