@@ -57,11 +57,14 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.setAttribute("for","uploader_file_input");
     uploader_file_label.textContent = "上传";
 
+    upload_path_div.style.display = "flex";
+    upload_path_div.style.width = "100%";
+    uploade_path_text.style.width = "83%";
     uploader_file_input.style.display = "none";
     uploader_file_label.style.backgroundColor = "blue";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
-    upload_path_div.style.width = "100%"
+    uploader_file_label.style.width = "14%"
     upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
     upload_path_div.style.color = "white";
     uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
@@ -117,7 +120,7 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div.addEventListener("drop", function(event) {
         event.preventDefault();
         upload_path_div.addEventListener("dragover", preventDefaultHandler);
-        uploade_path_text.style.backgroundColor = "white";
+        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
         upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
         const files = event.dataTransfer.files;
         uploaderForUpload(files);
@@ -147,7 +150,7 @@ function uploaderCraeteElementsAndWait(){
     setTimeout(function() {
         const uploader_tab = document.getElementById("tab_extension_uploader");
         uploader_tab.insertBefore(upload_path_div,uploader_tab.children[0]);
-    },1000*50);
+    },1000*30);
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
