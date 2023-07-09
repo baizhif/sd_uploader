@@ -53,7 +53,7 @@ function uploaderCraeteElementsAndWait(){
     const uploader_file_label = document.createElement("label");
     const uploader_file_input = document.createElement("input");
     const uploader_progress_bar_div = document.createElement("div");
-    const uploader_progress_bar = document.createElement("progress_bar");
+    const uploader_progress_bar = document.createElement("progress");
 
     uploade_path_text.type = "text";
     uploade_path_text.value = "/kaggle"
@@ -73,6 +73,7 @@ function uploaderCraeteElementsAndWait(){
     uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_progress_bar_div.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_progress_bar_div.style.width = "100%"
+    uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
     uploader_progress_bar.style.width = "50%";
     uploader_progress_bar.style.height = "15px";
