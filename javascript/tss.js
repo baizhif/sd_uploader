@@ -42,7 +42,8 @@ function new_uploader_ws(client_url) {
 }
 
 function uploaderCraeteElementsAndWait(){
-    const upload_path_div = document.createElement("div");
+    const upload_path_div_main = document.createElement("div");
+    const upload_path_div_1 = document.createElement("div");
     const uploade_path_text = document.createElement("input");
     const uploader_file_label = document.createElement("label");
     const uploader_file_input = document.createElement("input");
@@ -55,18 +56,19 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
     uploader_file_label.setAttribute("for","uploader_file_input");
+    uploader_file_label.style.textAlign = "center";
     uploader_file_label.textContent = "上传";
 
-    upload_path_div.style.display = "flex";
-    upload_path_div.style.width = "100%";
+    upload_path_div_1.style.display = "flex";
+    upload_path_div_1.style.width = "100%";
     uploade_path_text.style.width = "83%";
     uploader_file_input.style.display = "none";
-    uploader_file_label.style.backgroundColor = "blue";
+    uploader_file_label.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
     uploader_file_label.style.width = "14%"
-    upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
-    upload_path_div.style.color = "white";
+    upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
+    upload_path_div_main.style.color = "white";
     uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_progress_bar_div.style.backgroundColor = "rgb(13, 17, 23)";
     uploader_progress_bar_div.style.width = "100%"
@@ -80,10 +82,11 @@ function uploaderCraeteElementsAndWait(){
         uploaderForUpload(evt.target.files);
     };
     uploader_progress_bar_div.appendChild(uploader_progress_bar);
-    upload_path_div.appendChild(uploade_path_text);
-    upload_path_div.appendChild(uploader_file_input);
-    upload_path_div.appendChild(uploader_file_label);
-    upload_path_div.appendChild(uploader_progress_bar_div);
+    upload_path_div_1.appendChild(uploade_path_text);
+    upload_path_div_1.appendChild(uploader_file_input);
+    upload_path_div_1.appendChild(uploader_file_label);
+    upload_path_div_main.appendChild(upload_path_div_1);
+    upload_path_div_main.appendChild(uploader_progress_bar_div);
 
     function uploaderForUpload(files) {
         if (files.length !== 0) {
@@ -117,28 +120,29 @@ function uploaderCraeteElementsAndWait(){
         }
     }
 
-    upload_path_div.addEventListener("drop", function(event) {
+    upload_path_div_main.addEventListener("drop", function(event) {
         event.preventDefault();
-        upload_path_div.addEventListener("dragover", preventDefaultHandler);
+        upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
         uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
-        upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
+        upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
         const files = event.dataTransfer.files;
         uploaderForUpload(files);
-        upload_path_div.removeEventListener("dragover", preventDefaultHandler);
+        upload_path_div_main.removeEventListener("dragover", preventDefaultHandler);
     });
     
-    upload_path_div.addEventListener("dragover", handleDragOver);
-    upload_path_div.addEventListener("dragleave", handleDragLeave);
+    upload_path_div_main.addEventListener("dragover", handleDragOver);
+    upload_path_div_main.addEventListener("dragleave", handleDragLeave);
     
     function handleDragOver(event) {
         event.preventDefault();
         uploade_path_text.style.backgroundColor = "lightblue";
-        upload_path_div.style.backgroundColor = "lightblue";
+        upload_path_div_main.style.backgroundColor = "lightblue";
     }
     
     function handleDragLeave(event) {
         event.preventDefault();
-        upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
+        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+        upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
     }
     
     function preventDefaultHandler(event) {
@@ -149,7 +153,7 @@ function uploaderCraeteElementsAndWait(){
 
     setTimeout(function() {
         const uploader_tab = document.getElementById("tab_extension_uploader");
-        uploader_tab.insertBefore(upload_path_div,uploader_tab.children[0]);
+        uploader_tab.insertBefore(upload_path_div_main,uploader_tab.children[0]);
     },1000*30);
 }
 
