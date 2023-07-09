@@ -108,7 +108,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
     @app.post("/uploader_tab/api/upload")
-    async def filesUploadProcess(files: List[UploadFile] = File(...), path: Optional[str] = None):
+    async def filesUploadProcess(files: List[UploadFile] = File(...), Path: Optional[str] = None):
         print(files,path)
         for file in files:
             with open(os.path.join(path,file.filename),"wb") as f:
