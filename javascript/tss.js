@@ -56,10 +56,10 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
     uploader_file_label.setAttribute("for","uploader_file_input");
-    upload_path_div_1.style.textAlign = "center";
-    uploader_file_label.style.marginLeft = "auto";
-    upload_path_div_1.style.marginRight = "auto";
-    uploader_file_label.textContent = "上传";
+    // upload_path_div_1.style.textAlign = "center";
+    // uploader_file_label.style.marginLeft = "auto";
+    // uploader_file_label.style.marginRight = "auto";
+    uploader_file_label.innerText = "上传";
 
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
@@ -154,7 +154,7 @@ function uploaderCraeteElementsAndWait(){
     setTimeout(function() {
         const uploader_tab = document.getElementById("tab_extension_uploader");
         uploader_tab.insertBefore(upload_path_div_main,uploader_tab.children[0]);
-    },1000*30);
+    },1000*25);
 }
 
 document.addEventListener('DOMContentLoaded', (event) => {
