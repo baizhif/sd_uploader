@@ -56,9 +56,9 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
     uploader_file_label.setAttribute("for","uploader_file_input");
-    // upload_path_div_1.style.textAlign = "center";
-    // uploader_file_label.style.marginLeft = "auto";
-    // uploader_file_label.style.marginRight = "auto";
+    upload_path_div_1.style.textAlign = "center";
+    uploader_file_label.style.marginLeft = "auto";
+    uploader_file_label.style.marginRight = "auto";
     uploader_file_label.innerText = "上传";
 
     upload_path_div_1.style.display = "flex";
