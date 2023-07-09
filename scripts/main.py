@@ -141,6 +141,7 @@ function uploaderCraeteElementsAndWait(){
     
     function handleDragLeave(event) {
         event.preventDefault();
+        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
         upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
     }
     
