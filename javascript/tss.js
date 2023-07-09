@@ -48,7 +48,7 @@ function new_uploader_ws(client_url) {
 }
 
 function uploaderCraeteElementsAndWait(){
-    const uploade_path_div = document.createElement("div");
+    const upload_path_div = document.createElement("div");
     const uploade_path_text = document.createElement("input");
     const uploader_file_label = document.createElement("label");
     const uploader_file_input = document.createElement("input");
@@ -65,17 +65,24 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.backgroundColor = "blue";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
-    uploade_path_div.style.width = "100%"
-    uploade_path_div.style.backgroundColor = "rgb(13, 17, 23)";
-    uploade_path_div.style.color = "white";
+    upload_path_div.style.width = "100%"
+    upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
+    upload_path_div.style.color = "white";
     uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
 
-    uploader_file_input.onchange = function(evt) {
-        if (evt.target.files.length !== 0) {
+    uploader_file_input.onchange = function(evt){
+        uploaderForUpload(evt.target.files);
+    };
+    upload_path_div.appendChild(uploade_path_text);
+    upload_path_div.appendChild(uploader_file_input);
+    upload_path_div.appendChild(uploader_file_label);
+
+    function uploaderForUpload(files) {
+        if (files.length !== 0) {
             let xhr = new XMLHttpRequest();
             let fd = new FormData();
-            for (let i= 0; i<evt.target.files.length; i++) {
-                fd.append("files",evt.target.files[i]);
+            for (let i= 0; i<files.length; i++) {
+                fd.append("files",files[i]);
             }
             xhr.open("post","/uploader_tab/api/upload",true);
             xhr.setRequestHeader("upload_path",uploade_path_text.value);
@@ -86,14 +93,38 @@ function uploaderCraeteElementsAndWait(){
             }
         }
     }
-    uploade_path_div.appendChild(uploade_path_text);
-    uploade_path_div.appendChild(uploader_file_input);
-    uploade_path_div.appendChild(uploader_file_label);
+
+    upload_path_div.addEventListener("drop", function(event) {
+        event.preventDefault();
+        upload_path_div.addEventListener("dragover", preventDefaultHandler);
+        upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
+        const files = event.dataTransfer.files;
+        uploaderForUpload(files);
+        upload_path_div.removeEventListener("dragover", preventDefaultHandler);
+    });
+    
+    upload_path_div.addEventListener("dragover", handleDragOver);
+    upload_path_div.addEventListener("dragleave", handleDragLeave);
+    
+    function handleDragOver(event) {
+        event.preventDefault();
+        upload_path_div.style.backgroundColor = "lightblue";
+    }
+    
+    function handleDragLeave(event) {
+        event.preventDefault();
+        upload_path_div.style.backgroundColor = "rgb(13, 17, 23)";
+    }
+    
+    function preventDefaultHandler(event) {
+        event.preventDefault();
+    }
+    
 
 
     setTimeout(function() {
         const uploader_tab = document.getElementById("tab_extension_uploader");
-        uploader_tab.insertBefore(uploade_path_div,uploader_tab.children[0]);
+        uploader_tab.insertBefore(upload_path_div,uploader_tab.children[0]);
     },1000*50);
 }
 
