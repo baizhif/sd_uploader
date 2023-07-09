@@ -67,6 +67,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.cursor = "pointer";
     uploade_path_div.style.backgroundColor = "rgb(13, 17, 23)";
     uploade_path_div.style.color = "white";
+    uploade_path_text.backgroundColor = "rgb(13, 17, 23)";
 
     uploader_file_input.onchange = function(evt) {
         if (evt.target.files.length !== 0) {
