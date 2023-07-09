@@ -2,7 +2,6 @@ import gradio as gr
 import os
 import subprocess
 from zipfile import ZipFile
-from fastapi import FastAPI
 
 from modules import script_callbacks
 
@@ -108,8 +107,9 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
-    @app.route("/uploader_tab/api/upload",methods=["POST"])
-    async def filesUploadProcess(files: List[UploadFile] = File(...), path: Optional[str] = Header(None)):
+    @app.post("/uploader_tab/api/upload",methods=["POST"])
+    async def filesUploadProcess(files: List[UploadFile], path: Optional[str]):
+        print(files,path)
         for file in files:
             with open(os.path.join(path,file.filename),"wb") as f:
                 for chunk in iter(lambda:file.file.read(1024*1024*10),b''):
