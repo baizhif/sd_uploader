@@ -6,6 +6,8 @@ from zipfile import ZipFile
 from modules import script_callbacks
 
 def runZipToDownload(path):
+    if os.path.exists(path) is False:
+        return "not a file or dir"
     path = path.strip()
     if os.path.isdir(path):
         filein = os.path.join('./',os.path.basename(path) + ".zip")
@@ -16,12 +18,17 @@ def runZipToDownload(path):
                 zip.write(os.path.join(path, filename), os.path.join(fpath, filename))
         zip.close()
     else:
-        if os.path.exists(path) is False:
-            raise FileNotFoundError
         filein = path
     return filein
 
 def runCmd(cmd):
+    if not cmd:
+        return ''
+    if cmd.startswith("cd"):
+        if os.path.isdir(cmd[2:].strip()):
+            os.chdir(cmd[2:].strip())
+        else:
+            return "the " + cmd[2:].strip() + " dir not found! check your input."
     p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
     try:
         return p.stdout.decode('gbk')
@@ -35,6 +42,7 @@ def on_ui_tabs():
 
             label_output = gr.Text(label="输出")
             fileOut = gr.File(label="文件输出")
+            fileOut.style(height = "30")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
         cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
         return [(ui_component, "uploader", "extension_uploader")]
