@@ -1,105 +1,166 @@
-import gradio as gr
-import os
-import subprocess
-from zipfile import ZipFile
+if (window.location.protocol == "https:") {
+    uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
+} else {
+    uploader_ws_url = 'ws://'+ window.location['host'] + '/ws'
+}
 
-from modules import script_callbacks
+uploader_ws = ''
 
-def runZipToDownload(path):
-    path = path.strip()
-    if os.path.isdir(path):
-        filein = os.path.join('./',os.path.basename(path) + ".zip")
-        zip = ZipFile(filein, "w", 8)
-        for path, _, filenames in os.walk(path):
-            fpath = path.replace(path, '')
-            for filename in filenames:
-                zip.write(os.path.join(path, filename), os.path.join(fpath, filename))
-        zip.close()
-    else:
-        if os.path.exists(path) is False:
-            raise FileNotFoundError
-        filein = path
-    return filein
+let count_div = document.createElement("div")
 
-def runCmd(cmd):
-    p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
-    try:
-        return p.stdout.decode('gbk')
-    except UnicodeDecodeError:
-        return p.stdout.decode('utf-8')
-def on_ui_tabs():
-    with gr.Blocks(analytics_enabled=False) as ui_component:
-        with gr.Column():
-            text = gr.Text(label="上传路径", value="/kaggle")
-            cmd_text = gr.Text(label="执行命令")
-            download_path_Text = gr.Text(label="输入下载的目录如:\n/kaggle/stable-diffusion-webui/outputs")
+function getPublicIp(){
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', "https://api.ipify.org/?format=json", true);
+    httpRequest.send();
+    httpRequest.onload = function () {
+        var json = httpRequest.responseText;
+        let data=JSON.parse(json);
+        public_ip = data.ip
+        var client_url = uploader_ws_url + "/"+ public_ip.replace(/\./g,'_');
+        new_uploader_ws(client_url)
+    }
+}
 
-            label_output = gr.Text(label="输出")
-            fileOut = gr.File(label="文件输出")
-        download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
-        cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
-        return [(ui_component, "uploader", "extension_uploader")]
+function new_uploader_ws(client_url) {
+    uploader_ws = new WebSocket(client_url);
+    uploader_ws.onerror = function () {
+        uploader_ws.close();
+        setTimeout(function () {
+            getPublicIp();
+        },3000)
+    }
+    uploader_ws.onclose = function () {
+        uploader_ws.close();
+        setTimeout(function () {
+            getPublicIp();
+        },3000)
+    }
+    uploader_ws.onmessage = function setCount(evt) {
+        
+        count_div.innerText = evt.data;
+    }
+}
+
+function uploaderCraeteElementsAndWait(){
+    const upload_path_div_main = document.createElement("div");
+    const upload_path_div_1 = document.createElement("div");
+    const uploade_path_text = document.createElement("input");
+    const uploader_file_label = document.createElement("label");
+    const uploader_file_input = document.createElement("input");
+    const uploader_progress_bar_div = document.createElement("div");
+    const uploader_progress_bar = document.createElement("progress");
+
+    uploade_path_text.type = "text";
+    uploade_path_text.value = "/kaggle"
+    uploader_file_input.type = "file";
+    uploader_file_input.multiple = "multiple";
+    uploader_file_input.id = "uploader_file_input";
+    uploader_file_label.setAttribute("for","uploader_file_input");
+    uploader_file_label.style.textAlign = "center";
+    uploader_file_label.textContent = "上传";
+
+    upload_path_div_1.style.display = "flex";
+    upload_path_div_1.style.width = "100%";
+    uploade_path_text.style.width = "83%";
+    uploader_file_input.style.display = "none";
+    uploader_file_label.style.backgroundColor = "rgb(13, 17, 23)";
+    uploader_file_label.style.borderRadius = "4px";
+    uploader_file_label.style.cursor = "pointer";
+    uploader_file_label.style.width = "14%"
+    upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
+    upload_path_div_main.style.color = "white";
+    uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+    uploader_progress_bar_div.style.backgroundColor = "rgb(13, 17, 23)";
+    uploader_progress_bar_div.style.width = "100%"
+    uploader_progress_bar_div.style.height = "20px";
+    uploader_progress_bar_div.style.display = "none";
+    uploader_progress_bar.style.height = "15px";
+    uploader_progress_bar.style.width = "100%"
+    uploader_progress_bar.style.backgroundColor = "rgb(13, 17, 23)";
+
+    uploader_file_input.onchange = function(evt){
+        uploaderForUpload(evt.target.files);
+    };
+    uploader_progress_bar_div.appendChild(uploader_progress_bar);
+    upload_path_div_1.appendChild(uploade_path_text);
+    upload_path_div_1.appendChild(uploader_file_input);
+    upload_path_div_1.appendChild(uploader_file_label);
+    upload_path_div_main.appendChild(upload_path_div_1);
+    upload_path_div_main.appendChild(uploader_progress_bar_div);
+
+    function uploaderForUpload(files) {
+        if (files.length !== 0) {
+            let xhr = new XMLHttpRequest();
+            let fd = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                fd.append("files", files[i]);
+            }
+            xhr.open("post", "/uploader_tab/api/upload", true);
+            xhr.setRequestHeader("upload_path", uploade_path_text.value);
+            uploader_file_label.disabled = true;
+            uploader_progress_bar_div.style.display = "block";
     
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect,UploadFile,Request,File
-from typing import List
-from typing import Optional
-class ConnectionManager:
-    def __init__(self):
-        self.user_count = 0
-        self.ws_count = 0
-        self.ip_pool = dict()
+            // 处理上传进度
+            xhr.upload.onprogress = function (event) {
+                if (event.lengthComputable) {
+                    const progress = (event.loaded / event.total);
+                    uploader_progress_bar.value = progress; // 更新进度条的值
+                }
+            };
+    
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    uploader_file_label.disabled = false;
+                    uploader_progress_bar_div.style.display = "none";
+                    uploader_progress_bar.value = 0;
+                }
+            };
+    
+            xhr.send(fd);
+        }
+    }
 
-    async def connect(self, websocket: WebSocket, ip_addr):
-        await websocket.accept()
-        if ip_addr in self.ip_pool:
-            self.ip_pool[ip_addr].append(websocket)
-        else:
-            self.ip_pool[ip_addr] = [websocket]
-            self.user_count +=1
-        self.ws_count +=1
-
-    def disconnect(self, websocket: WebSocket, ip_addr):
-        self.ip_pool[ip_addr].remove(websocket)
-        if self.ip_pool[ip_addr] == []:
-            self.ip_pool.pop(ip_addr)
-            self.user_count -= 1
-        self.ws_count -= 1
-
-    async def send_personal_message(self, message: str, websocket: WebSocket):
-        if websocket.client_state == 1:
-            await websocket.send_text(message)
-
-    async def broadcast(self, message: str):
-        for connection in (ws for wss in self.ip_pool.values() for ws in wss):
-            await connection.send_text(message)
-
-manager = ConnectionManager()
-
-def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
-    @app.websocket("/ws/{ip_addr}")
-    async def websocket_endpoint(websocket: WebSocket,ip_addr:str):
-        await manager.connect(websocket, ip_addr)
-        await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
-        try:
-            while True:
-                data = await websocket.receive_text()
-                await manager.send_personal_message(f"You wrote: {data}", websocket)
-        except WebSocketDisconnect:
-            manager.disconnect(websocket,ip_addr)
-            await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
-    @app.post("/uploader_tab/api/upload")
-    async def filesUploadProcess(request: Request,files: List[UploadFile] = File(...)):
-        path = request.headers.get("upload_path")
-        print(path)
-        if os.path.exists(path) is False:
-            os.makedirs(path)
-        for file in files:
-            with open(os.path.join(path,file.filename),"wb") as f:
-                for chunk in iter(lambda:file.file.read(1024*1024*10),b''):
-                    f.write(chunk)
-            f.close()
-        return {"succeed":[file.filename for file in files]}
+    upload_path_div_main.addEventListener("drop", function(event) {
+        event.preventDefault();
+        upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
+        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+        upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
+        const files = event.dataTransfer.files;
+        uploaderForUpload(files);
+        upload_path_div_main.removeEventListener("dragover", preventDefaultHandler);
+    });
+    
+    upload_path_div_main.addEventListener("dragover", handleDragOver);
+    upload_path_div_main.addEventListener("dragleave", handleDragLeave);
+    
+    function handleDragOver(event) {
+        event.preventDefault();
+        uploade_path_text.style.backgroundColor = "lightblue";
+        upload_path_div_main.style.backgroundColor = "lightblue";
+    }
+    
+    function handleDragLeave(event) {
+        event.preventDefault();
+        upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
+    }
+    
+    function preventDefaultHandler(event) {
+        event.preventDefault();
+    }
+    
 
 
-script_callbacks.on_ui_tabs(on_ui_tabs)
-script_callbacks.on_app_started(on_app_started)
+    setTimeout(function() {
+        const uploader_tab = document.getElementById("tab_extension_uploader");
+        uploader_tab.insertBefore(upload_path_div_main,uploader_tab.children[0]);
+    },1000*30);
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    if (window.location['href'].endsWith('__theme=dark')) {
+        count_div.style = "background:rgb(13, 17, 23);color:white"
+    }
+    document.body.appendChild(count_div)
+    getPublicIp();
+    uploaderCraeteElementsAndWait();
+});
