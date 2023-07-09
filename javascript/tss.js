@@ -22,21 +22,15 @@ function getPublicIp(){
 }
 
 function new_uploader_ws(client_url) {
-    // if (uploader_ws & !uploader_ws.CLOSED) {
-    //     uploader_ws.close()
-    //     delete uploader_ws
-    // }
     uploader_ws = new WebSocket(client_url);
     uploader_ws.onerror = function () {
         uploader_ws.close();
-        delete uploader_ws;
         setTimeout(function () {
             getPublicIp();
         },3000)
     }
     uploader_ws.onclose = function () {
         uploader_ws.close();
-        delete uploader_ws;
         setTimeout(function () {
             getPublicIp();
         },3000)
@@ -76,7 +70,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
     uploader_progress_bar.style.height = "15px";
-    uploader_progress_bar.width = "100%"
+    uploader_progress_bar.style.width = "100%"
     uploader_progress_bar.style.backgroundColor = "rgb(13, 17, 23)";
 
     uploader_file_input.onchange = function(evt){
