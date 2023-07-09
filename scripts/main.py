@@ -109,11 +109,11 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
     @app.route("/uploader_tab/api/upload",methods=["POST"])
-    async def filesUploadProcess(files: List[UploadFile] = File(...),path:Optional[str]=Header(None)):
+    async def filesUploadProcess(files: List[UploadFile] = File(...), path: Optional[str] = Header(None)):
         for file in files:
-            with open(os.path.join(path,file.filename)) as f:
-                for i in iter(lambda:file.file.read(1024*1024*10),b''):
-                    f.write(i)
+            with open(os.path.join(path,file.filename),"wb") as f:
+                for chunk in iter(lambda:file.file.read(1024*1024*10),b''):
+                    f.write(chunk)
             f.close()
         return {"succeed":[file.filename for file in files]}
 
