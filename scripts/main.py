@@ -113,7 +113,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         try:
             while True:
                 data = await websocket.receive_text()
-                await dataProcess()
+                await dataProcess(data,websocket)
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
