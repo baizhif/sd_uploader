@@ -1,10 +1,6 @@
-if (window.location.protocol == "https:") {
-    uploader_ws_url = 'wss://'+ window.location['host'] + '/ws'
-} else {
-    uploader_ws_url = 'ws://'+ window.location['host'] + '/ws'
-}
-
-uploader_ws = ''
+const protocol = window.location.protocol;
+const uploader_ws_url = `${protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}/ws`;
+let uploader_ws;
 
 let count_div = document.createElement("div")
 
@@ -36,22 +32,32 @@ function new_uploader_ws(client_url) {
         },3000)
     }
     uploader_ws.onmessage = function setCount(evt) {
+        if (evt.data.startswith("cmd")) {
+            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data;
+            uploader_run_cmd_output_div.style.display = "block";
+        }else{
+            count_div.innerText = evt.data;
+        }
         
-        count_div.innerText = evt.data;
     }
 }
-
+const uploader_run_cmd_output_div = document.createElement("div");
 function uploaderCraeteElementsAndWait(){
     const upload_path_div_main = document.createElement("div");
     const upload_path_div_1 = document.createElement("div");
+    const upload_path_div_2 = document.createElement("div");
     const uploade_path_text = document.createElement("input");
+    const uploader_run_cmd = document.createElement("input");
     const uploader_file_label = document.createElement("label");
     const uploader_file_input = document.createElement("input");
     const uploader_progress_bar_div = document.createElement("div");
     const uploader_progress_bar = document.createElement("progress");
 
+    uploader_run_cmd.type = "text";
+    uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
     uploade_path_text.value = "/kaggle"
+    uploade_path_text.placeholder = "输入要上传到指定的路径"
     uploader_file_input.type = "file";
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
@@ -60,7 +66,8 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.marginLeft = "auto";
     uploader_file_label.style.marginRight = "auto";
     uploader_file_label.innerText = "上传";
-
+    
+    count_div.style = "backgroundColor:" + uploader_backgroung_color+ "; " + "color:" + fontcolor + ";";
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
@@ -69,14 +76,18 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
     uploader_file_label.style.width = "5%"
-    upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
-    upload_path_div_main.style.color = "white";
-    uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+    upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
+    upload_path_div_main.style.color = fontcolor;
+    uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     uploader_progress_bar_div.style.width = "100%"
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
     uploader_progress_bar.style.height = "15px";
-    uploader_progress_bar.style.width = "100%"
+    uploader_progress_bar.style.width = "100%";
+    uploader_run_cmd_output_div.style.width = "100%";
+    uploader_run_cmd_output_div.style.height = "30px";
+    uploader_run_cmd_output_div.style.overflow = "auto";
+    uploader_run_cmd_output_div.style.display = "none"
 
     uploader_file_input.onchange = function(evt){
         uploaderForUpload(evt.target.files);
@@ -85,8 +96,11 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_1.appendChild(uploade_path_text);
     upload_path_div_1.appendChild(uploader_file_input);
     upload_path_div_1.appendChild(uploader_file_label);
+    upload_path_div_2.appendChild(uploader_run_cmd);
     upload_path_div_main.appendChild(upload_path_div_1);
     upload_path_div_main.appendChild(uploader_progress_bar_div);
+    upload_path_div_main.appendChild(upload_path_div_2);
+    upload_path_div_main.appendChild(uploader_run_cmd_output_div);
 
     function uploaderForUpload(files) {
         if (files.length !== 0) {
@@ -120,11 +134,16 @@ function uploaderCraeteElementsAndWait(){
         }
     }
 
+    uploader_run_cmd.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            uploader_ws.send("runcmd" + uploader_run_cmd.value)
+        }
+    })
     upload_path_div_main.addEventListener("drop", function(event) {
         event.preventDefault();
         upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
-        upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
-        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+        upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
+        uploade_path_text.style.backgroundColor = uploader_backgroung_color;
         const files = event.dataTransfer.files;
         uploaderForUpload(files);
         upload_path_div_main.removeEventListener("dragover", preventDefaultHandler);
@@ -141,27 +160,32 @@ function uploaderCraeteElementsAndWait(){
     
     function handleDragLeave(event) {
         event.preventDefault();
-        upload_path_div_main.style.backgroundColor = "rgb(13, 17, 23)";
-        uploade_path_text.style.backgroundColor = "rgb(13, 17, 23)";
+        upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
+        uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     }
     
     function preventDefaultHandler(event) {
         event.preventDefault();
     }
     
-
-
     setTimeout(function() {
+        document.body.appendChild(count_div)
         const uploader_tab = document.getElementById("tab_extension_uploader");
         uploader_tab.insertBefore(upload_path_div_main,uploader_tab.children[0]);
     },1000*25);
 }
 
+let uploader_backgroung_color = "";
+let fontcolor = "";
 document.addEventListener('DOMContentLoaded', (event) => {
-    if (window.location['href'].endsWith('__theme=dark')) {
-        count_div.style = "background:rgb(13, 17, 23);color:white"
-    }
-    document.body.appendChild(count_div)
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches || window.location['href'].endsWith('__theme=dark')) {
+        // 系统主题为黑暗模式
+        uploader_backgroung_color = "rgb(13, 17, 23)";
+        fontcolor = "white";
+      }else{
+        uploader_backgroung_color = "white";
+        fontcolor = "black";
+      }
     getPublicIp();
     uploaderCraeteElementsAndWait();
 });
