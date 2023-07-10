@@ -151,28 +151,28 @@ function uploaderCraeteElementsAndWait(){
         }
     }
     uploader_file_button.addEventListener("click",function(){uploader_file_input.click()})
-    upload_path_div_main.addEventListener("drop", function(event) {
+    upload_path_div_1.addEventListener("drop", function(event) {
         event.preventDefault();
-        upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
-        upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
+        upload_path_div_1.addEventListener("dragover", preventDefaultHandler);
+        upload_path_div_1.style.backgroundColor = uploader_backgroung_color;
         uploade_path_text.style.backgroundColor = uploader_backgroung_color;
         const files = event.dataTransfer.files;
         uploaderForUpload(files);
-        upload_path_div_main.removeEventListener("dragover", preventDefaultHandler);
+        upload_path_div_1.removeEventListener("dragover", preventDefaultHandler);
     });
     
-    upload_path_div_main.addEventListener("dragover", handleDragOver);
-    upload_path_div_main.addEventListener("dragleave", handleDragLeave);
+    upload_path_div_1.addEventListener("dragover", handleDragOver);
+    upload_path_div_1.addEventListener("dragleave", handleDragLeave);
     
     function handleDragOver(event) {
         event.preventDefault();
-        upload_path_div_main.style.backgroundColor = "lightblue";
+        upload_path_div_1.style.backgroundColor = "lightblue";
         uploade_path_text.style.backgroundColor = "lightblue";
     }
     
     function handleDragLeave(event) {
         event.preventDefault();
-        upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
+        upload_path_div_1.style.backgroundColor = uploader_backgroung_color;
         uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     }
     
