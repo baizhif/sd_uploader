@@ -35,6 +35,7 @@ function new_uploader_ws(client_url) {
         reconnect();
     }
     uploader_ws.onmessage = function(evt) {
+        console.log(evt.data);
         if (evt.data.startsWith("cmd")) {
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data;
             uploader_run_cmd_output_div.style.display = "block";
