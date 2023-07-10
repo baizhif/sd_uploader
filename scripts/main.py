@@ -99,7 +99,7 @@ class someMethods:
 
 async def dataProcess(data:str,ws:WebSocket):
     if data.startswith("runcmd"):
-        cmd = data[:6].strip()
+        cmd = data[6:].strip()
         for info in someMethods.runcmd(cmd):
             print(info,cmd,"cmd" + info)
             await manager.send_personal_message("cmd" + info,ws)
