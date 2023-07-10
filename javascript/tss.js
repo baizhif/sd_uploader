@@ -56,7 +56,6 @@ function uploaderCraeteElementsAndWait(){
     const uploader_progress_bar_div = document.createElement("div");
     const uploader_progress_bar = document.createElement("progress");
 
-    uploader_run_cmd.type = "text";
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
     uploade_path_text.value = "/kaggle"
@@ -93,6 +92,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_run_cmd_output_div.style.width = "100%";
     uploader_run_cmd_output_div.style.height = "300px";
     uploader_run_cmd_output_div.style.overflow = "auto";
+    uploader_run_cmd_output_div.style.border = "1px"
     uploader_run_cmd_output_div.style.display = "none"
     uploader_file_input.onchange = function(evt){
         uploaderForUpload(evt.target.files);
@@ -138,12 +138,11 @@ function uploaderCraeteElementsAndWait(){
             xhr.send(fd);
         }
     }
-
-    uploader_run_cmd.addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
+    uploader_run_cmd.onkeyup = function(evt){
+        if (evt.key == 'Enter') {
             uploader_ws.send("runcmd" + uploader_run_cmd.value)
         }
-    })
+    }
     upload_path_div_main.addEventListener("drop", function(event) {
         event.preventDefault();
         upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
@@ -176,16 +175,16 @@ function uploaderCraeteElementsAndWait(){
     let = resizeable = false;
     let clientY;
     uploader_run_cmd_output_div.onmousedown = function(evt){
-        if (evt.button == 0){
+        if (evt.button == 2){
             console.log("按下");
             resizeable = true;
             clientY = evt.clientY;
         }
     }
     uploader_run_cmd_output_div.onmouseup = function(evt){
-        console.log("松开");
         if (resizeable){
         uploader_run_cmd_output_div.style.height = uploader_run_cmd_output_div.offsetHeight + (evt.clientY - clientY) + 'px';
+        clientY = evt.clientY;
         console.log("松开");
     }}
     
