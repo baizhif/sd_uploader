@@ -31,8 +31,8 @@ function new_uploader_ws(client_url) {
             getPublicIp();
         },3000)
     }
-    uploader_ws.onmessage = function setCount(evt) {
-        if (evt.data.startswith("cmd")) {
+    uploader_ws.onmessage = function(evt) {
+        if (evt.data.startsWith("cmd")) {
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data;
             uploader_run_cmd_output_div.style.display = "block";
         }else{
@@ -79,6 +79,7 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
     upload_path_div_main.style.color = fontcolor;
     uploade_path_text.style.backgroundColor = uploader_backgroung_color;
+    uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
     uploader_progress_bar_div.style.width = "100%"
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
