@@ -67,11 +67,11 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_input.type = "file";
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
+    uploader_file_label.innerText = "上传";
     uploader_file_label.setAttribute("for","uploader_file_input");
     upload_path_div_1.style.textAlign = "center";
     uploader_file_label.style.marginLeft = "auto";
     uploader_file_label.style.marginRight = "auto";
-    uploader_file_label.innerText = "上传";
     count_div.style.backgroundColor = uploader_backgroung_color;
     count_div.style.color = fontColor;
 
@@ -79,17 +79,19 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
     uploade_path_text.style.width = "95%";
+    uploader_run_cmd_submit.style.backgroundColor = uploader_backgroung_color;
+    uploader_run_cmd_submit.style.color = fontColor;
+    uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.width = "95%";
     uploader_file_input.style.display = "none";
-    // uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
     uploader_run_cmd_submit.style.cursor = "pointer";
     uploader_file_label.style.width = "5%";
     uploader_run_cmd_submit.style.width = "5%";
+    uploader_run_cmd_submit.style.height = "100%";
     upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
     upload_path_div_main.style.color = fontColor;
     uploade_path_text.style.backgroundColor = uploader_backgroung_color;
-    uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
     uploader_progress_bar_div.style.width = "100%";
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
@@ -147,6 +149,10 @@ function uploaderCraeteElementsAndWait(){
     }
     uploader_run_cmd.onkeyup = function(evt){
         if (evt.key == 'Enter') {
+            if (uploader_run_cmd.value === "clear" || uploader_run_cmd.value === "cls"){
+                uploader_run_cmd_output_div.innerText = "";
+                uploader_run_cmd_output_div.style.display = "none";
+            }
             uploader_ws.send("runcmd" + uploader_run_cmd.value)
         }
     }
