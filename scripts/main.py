@@ -72,11 +72,6 @@ class ConnectionManager:
             self.user_count -= 1
         self.ws_count -= 1
 
-    async def send_personal_message(self, message: str, websocket: WebSocket):
-        if websocket.client_state == 1:
-            print(message)
-            await websocket.send_text(message)
-
     async def broadcast(self, message: str):
         for connection in (ws for wss in self.ip_pool.values() for ws in wss):
             await connection.send_text(message)
@@ -102,7 +97,7 @@ async def dataProcess(data:str,ws:WebSocket):
     if data.startswith("runcmd"):
         cmd = data[6:].strip()
         for info in someMethods.runcmd(cmd):
-            await manager.send_personal_message("cmd" + info,ws)
+            await ws.send_text("cmd" + info)
 
 manager = ConnectionManager()
 
