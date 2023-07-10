@@ -70,6 +70,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.marginRight = "auto";
     uploader_file_label.innerText = "上传";
     count_div.style.backgroundColor = uploader_backgroung_color;
+    count_div.style.color = fontColor;
 
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
@@ -93,7 +94,6 @@ function uploaderCraeteElementsAndWait(){
     uploader_run_cmd_output_div.style.height = "300px";
     uploader_run_cmd_output_div.style.overflow = "auto";
     uploader_run_cmd_output_div.style.display = "none"
-
     uploader_file_input.onchange = function(evt){
         uploaderForUpload(evt.target.files);
     };
@@ -172,6 +172,22 @@ function uploaderCraeteElementsAndWait(){
     function preventDefaultHandler(event) {
         event.preventDefault();
     }
+
+    let = resizeable = false;
+    let clientY;
+    uploader_run_cmd_output_div.onmousedown = function(evt){
+        if (evt.button == 0){
+            console.log("按下");
+            resizeable = true;
+            clientY = evt.clientY;
+        }
+    }
+    uploader_run_cmd_output_div.onmouseup = function(evt){
+        console.log("松开");
+        if (resizeable){
+        uploader_run_cmd_output_div.style.height = uploader_run_cmd_output_div.offsetHeight + (evt.clientY - clientY) + 'px';
+        console.log("松开");
+    }}
     
     setTimeout(function() {
         document.body.appendChild(count_div)
