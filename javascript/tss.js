@@ -51,6 +51,7 @@ function uploaderCraeteElementsAndWait(){
     const upload_path_div_2 = document.createElement("div");
     const uploade_path_text = document.createElement("input");
     const uploader_run_cmd = document.createElement("input");
+    const uploader_run_cmd_submit = document.createElement("input")
     const uploader_file_label = document.createElement("label");
     const uploader_file_input = document.createElement("input");
     const uploader_progress_bar_div = document.createElement("div");
@@ -59,8 +60,10 @@ function uploaderCraeteElementsAndWait(){
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
     uploader_run_cmd.type = "text";
-    uploade_path_text.value = "/kaggle"
-    uploade_path_text.placeholder = "输入要上传到指定的路径"
+    uploader_run_cmd_submit.type = "button";
+    uploade_path_text.value = "/kaggle";
+    uploade_path_text.placeholder = "输入要上传到指定的路径";
+    uploader_run_cmd_submit.innerText = "执行";
     uploader_file_input.type = "file";
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
@@ -76,16 +79,18 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
     uploade_path_text.style.width = "95%";
+    uploader_run_cmd.style.width = "95%";
     uploader_file_input.style.display = "none";
     uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
-    uploader_file_label.style.width = "5%"
+    uploader_file_label.style.width = "5%";
+    uploader_run_cmd_submit.style.width = "5%";
     upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
     upload_path_div_main.style.color = fontColor;
     uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.width = "100%";
-    uploader_progress_bar_div.style.width = "100%"
+    uploader_progress_bar_div.style.width = "100%";
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
     uploader_progress_bar.style.height = "15px";
@@ -93,8 +98,8 @@ function uploaderCraeteElementsAndWait(){
     uploader_run_cmd_output_div.style.width = "100%";
     uploader_run_cmd_output_div.style.height = "300px";
     uploader_run_cmd_output_div.style.overflow = "auto";
-    uploader_run_cmd_output_div.style.border = "1px"
-    uploader_run_cmd_output_div.style.display = "none"
+    uploader_run_cmd_output_div.style.border = "1px";
+    uploader_run_cmd_output_div.style.display = "none";
     uploader_file_input.onchange = function(evt){
         uploaderForUpload(evt.target.files);
     };
@@ -103,6 +108,7 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_1.appendChild(uploader_file_input);
     upload_path_div_1.appendChild(uploader_file_label);
     upload_path_div_2.appendChild(uploader_run_cmd);
+    upload_path_div_2.appendChild(uploader_run_cmd_submit);
     upload_path_div_main.appendChild(upload_path_div_1);
     upload_path_div_main.appendChild(uploader_progress_bar_div);
     upload_path_div_main.appendChild(upload_path_div_2);
@@ -189,6 +195,9 @@ function uploaderCraeteElementsAndWait(){
         uploader_run_cmd_output_div.style.height = uploader_run_cmd_output_div.offsetHeight + (evt.clientY - clientY) + 'px';
         clientY = evt.clientY;
     }}
+    uploader_run_cmd_submit.onclick = function(){
+        uploader_ws.send(uploader_run_cmd.value);
+    }
     
     setTimeout(function() {
         document.body.appendChild(count_div)
