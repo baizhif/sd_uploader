@@ -66,8 +66,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.marginLeft = "auto";
     uploader_file_label.style.marginRight = "auto";
     uploader_file_label.innerText = "上传";
-    
-    count_div.style = "backgroundColor:" + uploader_backgroung_color+ "; " + "color:" + fontcolor + ";";
+    count_div.style = "backgroundColor:" + uploader_backgroung_color+ ";" + "color:" + fontColor + ";";
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
@@ -77,7 +76,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.cursor = "pointer";
     uploader_file_label.style.width = "5%"
     upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
-    upload_path_div_main.style.color = fontcolor;
+    upload_path_div_main.style.color = fontColor;
     uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.width = "100%";
@@ -178,15 +177,15 @@ function uploaderCraeteElementsAndWait(){
 }
 
 let uploader_backgroung_color = "";
-let fontcolor = "";
+let fontColor = "";
 document.addEventListener('DOMContentLoaded', (event) => {
     if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches || window.location['href'].endsWith('__theme=dark')) {
         // 系统主题为黑暗模式
         uploader_backgroung_color = "rgb(13, 17, 23)";
-        fontcolor = "white";
+        fontColor = "white";
       }else{
         uploader_backgroung_color = "white";
-        fontcolor = "black";
+        fontColor = "black";
       }
     getPublicIp();
     uploaderCraeteElementsAndWait();
