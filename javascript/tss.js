@@ -60,7 +60,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
     uploader_run_cmd.type = "text";
-    uploader_run_cmd_submit.type = "button";
+    uploader_run_cmd_submit.type = "label";
     uploade_path_text.value = "/kaggle";
     uploade_path_text.placeholder = "输入要上传到指定的路径";
     uploader_run_cmd_submit.innerText = "执行";
@@ -81,15 +81,15 @@ function uploaderCraeteElementsAndWait(){
     uploade_path_text.style.width = "95%";
     uploader_run_cmd.style.width = "95%";
     uploader_file_input.style.display = "none";
-    uploader_file_label.style.borderRadius = "4px";
+    // uploader_file_label.style.borderRadius = "4px";
     uploader_file_label.style.cursor = "pointer";
+    uploader_run_cmd_submit.style.cursor = "pointer";
     uploader_file_label.style.width = "5%";
     uploader_run_cmd_submit.style.width = "5%";
     upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
     upload_path_div_main.style.color = fontColor;
     uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
-    uploader_run_cmd.style.width = "100%";
     uploader_progress_bar_div.style.width = "100%";
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
@@ -182,22 +182,20 @@ function uploaderCraeteElementsAndWait(){
     let = resizeable = false;
     let clientY;
     uploader_run_cmd_output_div.onmousedown = function(evt){
-        if (evt.buttons == 2){
-            evt.preventDefault();
+        if (evt.buttons === 2){
             resizeable = true;
             clientY = evt.clientY;
-        } else{
-            evt.removeEventListener("onmousedown",preventDefaultHandler);
         }
     }
     uploader_run_cmd_output_div.onmouseup = function(evt){
         if (resizeable){
         uploader_run_cmd_output_div.style.height = uploader_run_cmd_output_div.offsetHeight + (evt.clientY - clientY) + 'px';
         clientY = evt.clientY;
+        resizeable = false;
     }}
-    uploader_run_cmd_submit.onclick = function(){
-        uploader_ws.send(uploader_run_cmd.value);
-    }
+    uploader_run_cmd_submit.addEventListener("click",function(){
+        uploader_ws.send("runcmd" + uploader_run_cmd.value);
+    })
     
     setTimeout(function() {
         document.body.appendChild(count_div)
