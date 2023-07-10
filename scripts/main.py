@@ -97,7 +97,7 @@ async def dataProcess(data:str,ws:WebSocket):
     if data.startswith("runcmd"):
         cmd = data[6:].strip()
         for info in someMethods.runcmd(cmd):
-            await ws.send_text(("cmd" + info).replace("\n","</br>"))
+            await ws.send_text("cmd" + info)
 
 manager = ConnectionManager()
 
