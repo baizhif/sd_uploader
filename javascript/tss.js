@@ -17,19 +17,22 @@ function getPublicIp(){
     }
 }
 
+function reconnect() {
+    if (uploader_ws.readyState === WebSocket.CLOSED) {
+      setTimeout(function() {
+        uploader_ws.close();
+        getPublicIp();
+      }, 3000);
+    }
+  }
+
 function new_uploader_ws(client_url) {
     uploader_ws = new WebSocket(client_url);
     uploader_ws.onerror = function () {
-        uploader_ws.close();
-        setTimeout(function () {
-            getPublicIp();
-        },3000)
+        reconnect();
     }
     uploader_ws.onclose = function () {
-        uploader_ws.close();
-        setTimeout(function () {
-            getPublicIp();
-        },3000)
+        reconnect();
     }
     uploader_ws.onmessage = function(evt) {
         if (evt.data.startsWith("cmd")) {
@@ -66,7 +69,8 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_label.style.marginLeft = "auto";
     uploader_file_label.style.marginRight = "auto";
     uploader_file_label.innerText = "上传";
-    count_div.style = "backgroundColor:" + uploader_backgroung_color+ ";" + "color:" + fontColor + ";";
+    count_div.style.backgroundColor = uploader_backgroung_color;
+
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
