@@ -80,6 +80,29 @@ class ConnectionManager:
         for connection in (ws for wss in self.ip_pool.values() for ws in wss):
             await connection.send_text(message)
 
+class someMethods:
+    def runcmd(cmd:str):
+        if not cmd:
+            yield ""
+            return
+        if cmd.startswith("cd"):
+            if os.path.isdir(cmd[2:].strip()):
+                os.chdir(cmd[2:].strip())
+                yield f"wkdir{cmd[2:].strip()}"
+            else:
+                yield "the " + cmd[2:].strip() + " dir not found! check your input."
+            return
+        p = subprocess.Popen(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        for info in iter(p.stdout.readline, b''):
+            yield info.decode('utf-8').strip()
+        
+
+async def dataProcess(data:str,ws:WebSocket):
+    if data.startswith("runcmd"):
+        cmd = data[:6].strip()
+        for info in someMethods.runcmd(cmd):
+            await manager.send_personal_message("cmd" + info,ws)
+
 manager = ConnectionManager()
 
 def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
@@ -90,13 +113,13 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         try:
             while True:
                 data = await websocket.receive_text()
-                await manager.send_personal_message(f"You wrote: {data}", websocket)
+                await dataProcess()
         except WebSocketDisconnect:
             manager.disconnect(websocket,ip_addr)
             await manager.broadcast(f"user_count:{manager.user_count}\tpage_count:{manager.ws_count}")
     @app.post("/uploader_tab/api/upload")
     async def filesUploadProcess(request: Request,files: List[UploadFile] = File(...)):
-        path = request.headers.get("upload_path")
+        path = request.headers.get("upload_path").strip()
         if os.path.exists(path) is False:
             os.makedirs(path)
         for file in files:
