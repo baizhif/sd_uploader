@@ -36,7 +36,7 @@ function new_uploader_ws(client_url) {
     }
     uploader_ws.onmessage = function(evt) {
         if (evt.data.startsWith("cmd")) {
-            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data;
+            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data.slice(3);
             uploader_run_cmd_output_div.style.display = "block";
         }else{
             count_div.innerText = evt.data;
