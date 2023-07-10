@@ -152,6 +152,7 @@ function uploaderCraeteElementsAndWait(){
             if (uploader_run_cmd.value === "clear" || uploader_run_cmd.value === "cls"){
                 uploader_run_cmd_output_div.innerText = "";
                 uploader_run_cmd_output_div.style.display = "none";
+                return;
             }
             uploader_ws.send("runcmd" + uploader_run_cmd.value)
         }
@@ -200,6 +201,11 @@ function uploaderCraeteElementsAndWait(){
         resizeable = false;
     }}
     uploader_run_cmd_submit.addEventListener("click",function(){
+        if (uploader_run_cmd.value === "clear" || uploader_run_cmd.value === "cls"){
+            uploader_run_cmd_output_div.innerText = "";
+            uploader_run_cmd_output_div.style.display = "none";
+            return;
+        }
         uploader_ws.send("runcmd" + uploader_run_cmd.value);
     })
     
