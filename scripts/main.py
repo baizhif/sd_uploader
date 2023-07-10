@@ -90,7 +90,7 @@ class someMethods:
             return
         p = subprocess.Popen(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         for info in iter(p.stdout.readline, b''):
-            yield info.decode('utf-8').strip()
+            yield info.decode('utf-8')
         
 
 async def dataProcess(data:str,ws:WebSocket):
