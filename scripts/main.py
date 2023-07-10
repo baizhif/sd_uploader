@@ -21,31 +21,14 @@ def runZipToDownload(path):
         filein = path
     return filein
 
-def runCmd(cmd):
-    if not cmd:
-        return ''
-    if cmd.startswith("cd"):
-        if os.path.isdir(cmd[2:].strip()):
-            os.chdir(cmd[2:].strip())
-            return f"wkdir{cmd[2:].strip()}"
-        else:
-            return "the " + cmd[2:].strip() + " dir not found! check your input."
-    p = subprocess.run(cmd.strip(), shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
-    try:
-        return p.stdout.decode('gbk')
-    except UnicodeDecodeError:
-        return p.stdout.decode('utf-8')
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
             cmd_text = gr.Text(label="执行命令")
             download_path_Text = gr.Text(label="输入下载的目录如:/kaggle/stable-diffusion-webui/outputs")
-
-            label_output = gr.Text(label="输出")
             fileOut = gr.File(label="文件输出")
             fileOut.style(height = "30")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
-        cmd_text.submit(fn=runCmd,inputs=[cmd_text],outputs=label_output)
         return [(ui_component, "uploader", "extension_uploader")]
     
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect,UploadFile,Request,File
@@ -79,14 +62,14 @@ class ConnectionManager:
 class someMethods:
     def runcmd(cmd:str):
         if not cmd:
-            yield ""
+            yield "\n"
             return
         if cmd.startswith("cd"):
             if os.path.isdir(cmd[2:].strip()):
                 os.chdir(cmd[2:].strip())
                 yield f"wkdir{cmd[2:].strip()}"
             else:
-                yield "the " + cmd[2:].strip() + " dir not found! check your input."
+                yield "the " + cmd[2:].strip() + " dir not found! check your input.\n"
             return
         p = subprocess.Popen(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         for info in iter(p.stdout.readline, b''):
