@@ -36,7 +36,6 @@ function new_uploader_ws(client_url) {
     }
     uploader_ws.onmessage = function(evt) {
         if (evt.data.startsWith("cmd")) {
-            console.log(evt.data.slice(3));
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data.slice(3);
             uploader_run_cmd_output_div.style.display = "block";
         }else{
@@ -91,7 +90,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_progress_bar.style.height = "15px";
     uploader_progress_bar.style.width = "100%";
     uploader_run_cmd_output_div.style.width = "100%";
-    uploader_run_cmd_output_div.style.height = "100px";
+    uploader_run_cmd_output_div.style.height = "300px";
     uploader_run_cmd_output_div.style.overflow = "auto";
     uploader_run_cmd_output_div.style.display = "none"
 
