@@ -58,6 +58,7 @@ function uploaderCraeteElementsAndWait(){
 
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
+    uploader_run_cmd.type = "text";
     uploade_path_text.value = "/kaggle"
     uploade_path_text.placeholder = "输入要上传到指定的路径"
     uploader_file_input.type = "file";
