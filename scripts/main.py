@@ -74,6 +74,7 @@ class ConnectionManager:
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
         if websocket.client_state == 1:
+            print(message)
             await websocket.send_text(message)
 
     async def broadcast(self, message: str):
@@ -101,7 +102,6 @@ async def dataProcess(data:str,ws:WebSocket):
     if data.startswith("runcmd"):
         cmd = data[6:].strip()
         for info in someMethods.runcmd(cmd):
-            print(info,cmd,"cmd" + info)
             await manager.send_personal_message("cmd" + info,ws)
 
 manager = ConnectionManager()
