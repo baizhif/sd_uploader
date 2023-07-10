@@ -175,17 +175,18 @@ function uploaderCraeteElementsAndWait(){
     let = resizeable = false;
     let clientY;
     uploader_run_cmd_output_div.onmousedown = function(evt){
-        if (evt.button == 2){
-            console.log("按下");
+        if (evt.buttons == 2){
+            evt.preventDefault();
             resizeable = true;
             clientY = evt.clientY;
+        } else{
+            evt.removeEventListener("onmousedown",preventDefaultHandler);
         }
     }
     uploader_run_cmd_output_div.onmouseup = function(evt){
         if (resizeable){
         uploader_run_cmd_output_div.style.height = uploader_run_cmd_output_div.offsetHeight + (evt.clientY - clientY) + 'px';
         clientY = evt.clientY;
-        console.log("松开");
     }}
     
     setTimeout(function() {
