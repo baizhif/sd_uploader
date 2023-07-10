@@ -51,8 +51,8 @@ function uploaderCraeteElementsAndWait(){
     const upload_path_div_2 = document.createElement("div");
     const uploade_path_text = document.createElement("input");
     const uploader_run_cmd = document.createElement("input");
-    const uploader_run_cmd_submit = document.createElement("input")
-    const uploader_file_label = document.createElement("label");
+    const uploader_run_cmd_submit = document.createElement("button")
+    const uploader_file_button = document.createElement("button");
     const uploader_file_input = document.createElement("input");
     const uploader_progress_bar_div = document.createElement("div");
     const uploader_progress_bar = document.createElement("progress");
@@ -60,18 +60,13 @@ function uploaderCraeteElementsAndWait(){
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
     uploader_run_cmd.type = "text";
-    uploader_run_cmd_submit.type = "label";
     uploade_path_text.value = "/kaggle";
     uploade_path_text.placeholder = "输入要上传到指定的路径";
     uploader_run_cmd_submit.innerText = "执行";
     uploader_file_input.type = "file";
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
-    uploader_file_label.innerText = "上传";
-    uploader_file_label.setAttribute("for","uploader_file_input");
-    upload_path_div_1.style.textAlign = "center";
-    uploader_file_label.style.marginLeft = "auto";
-    uploader_file_label.style.marginRight = "auto";
+    uploader_file_button.innerText = "上传";
     count_div.style.backgroundColor = uploader_backgroung_color;
     count_div.style.color = fontColor;
 
@@ -79,14 +74,12 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
     uploade_path_text.style.width = "95%";
-    uploader_run_cmd_submit.style.backgroundColor = uploader_backgroung_color;
-    uploader_run_cmd_submit.style.color = fontColor;
     uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.width = "95%";
     uploader_file_input.style.display = "none";
-    uploader_file_label.style.cursor = "pointer";
+    uploader_file_button.style.cursor = "pointer";
     uploader_run_cmd_submit.style.cursor = "pointer";
-    uploader_file_label.style.width = "5%";
+    uploader_file_button.style.width = "5%";
     uploader_run_cmd_submit.style.width = "5%";
     uploader_run_cmd_submit.style.height = "100%";
     upload_path_div_main.style.backgroundColor = uploader_backgroung_color;
@@ -108,7 +101,7 @@ function uploaderCraeteElementsAndWait(){
     uploader_progress_bar_div.appendChild(uploader_progress_bar);
     upload_path_div_1.appendChild(uploade_path_text);
     upload_path_div_1.appendChild(uploader_file_input);
-    upload_path_div_1.appendChild(uploader_file_label);
+    upload_path_div_1.appendChild(uploader_file_button);
     upload_path_div_2.appendChild(uploader_run_cmd);
     upload_path_div_2.appendChild(uploader_run_cmd_submit);
     upload_path_div_main.appendChild(upload_path_div_1);
@@ -125,7 +118,7 @@ function uploaderCraeteElementsAndWait(){
             }
             xhr.open("post", "/uploader_tab/api/upload", true);
             xhr.setRequestHeader("upload_path", uploade_path_text.value);
-            uploader_file_label.disabled = true;
+            uploader_file_button.disabled = true;
             uploader_progress_bar_div.style.display = "block";
     
             // 处理上传进度
@@ -138,7 +131,7 @@ function uploaderCraeteElementsAndWait(){
     
             xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                    uploader_file_label.disabled = false;
+                    uploader_file_button.disabled = false;
                     uploader_progress_bar_div.style.display = "none";
                     uploader_progress_bar.value = 0;
                 }
@@ -157,6 +150,7 @@ function uploaderCraeteElementsAndWait(){
             uploader_ws.send("runcmd" + uploader_run_cmd.value)
         }
     }
+    uploader_file_button.addEventListener("click",function(){uploader_file_input.click()})
     upload_path_div_main.addEventListener("drop", function(event) {
         event.preventDefault();
         upload_path_div_main.addEventListener("dragover", preventDefaultHandler);
