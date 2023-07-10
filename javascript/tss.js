@@ -80,6 +80,7 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.style.color = fontcolor;
     uploade_path_text.style.backgroundColor = uploader_backgroung_color;
     uploader_run_cmd.style.backgroundColor = uploader_backgroung_color;
+    uploader_run_cmd.style.width = "100%";
     uploader_progress_bar_div.style.width = "100%"
     uploader_progress_bar_div.style.height = "20px";
     uploader_progress_bar_div.style.display = "none";
