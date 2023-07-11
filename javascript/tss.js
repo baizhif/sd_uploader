@@ -191,6 +191,10 @@ function uploaderCraeteElementsAndWait(){
             uploader_run_cmd_output_div.style.cursor = "default";
         }
     })
+    uploader_run_cmd_output_div.addEventListener("mouseup",function(evt){
+        uploader_tab.removeEventListener("mousemove",uploader_move);
+        resizeable = false;
+    })
     uploader_run_cmd_output_div.addEventListener("mousedown",function(evt){
         const dir = getDirection(evt)
         if (dir !== '') {
@@ -202,8 +206,8 @@ function uploaderCraeteElementsAndWait(){
         }
     })
     uploader_run_cmd_output_div.addEventListener("mouseleave",function(evt){
-        resizeable = false;
         uploader_tab.removeEventListener("mousemove",uploader_move)
+        resizeable = false;
     })
     function uploader_move(evt){
         if (resizeable) {
