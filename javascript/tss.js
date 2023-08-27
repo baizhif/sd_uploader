@@ -191,7 +191,7 @@ function uploaderCraeteElementsAndWait(){
             uploader_run_cmd_output_div.style.cursor = "default";
         }
     })
-    uploader_run_cmd_output_div.addEventListener("mouseup",function(evt){
+    uploader_tab.addEventListener("mouseup",function(evt){
         uploader_tab.removeEventListener("mousemove",uploader_move);
         resizeable = false;
     })
