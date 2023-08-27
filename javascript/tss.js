@@ -191,10 +191,7 @@ function uploaderCraeteElementsAndWait(){
             uploader_run_cmd_output_div.style.cursor = "default";
         }
     })
-    uploader_tab.addEventListener("mouseup",function(evt){
-        uploader_tab.removeEventListener("mousemove",uploader_move);
-        resizeable = false;
-    })
+    
     uploader_run_cmd_output_div.addEventListener("mousedown",function(evt){
         const dir = getDirection(evt)
         if (dir !== '') {
@@ -243,6 +240,10 @@ function uploaderCraeteElementsAndWait(){
         document.body.appendChild(count_div)
         uploader_tab = document.getElementById("tab_extension_uploader");
         uploader_tab.insertBefore(upload_path_div_main,uploader_tab.children[0]);
+        uploader_tab.addEventListener("mouseup",function(evt){
+            uploader_tab.removeEventListener("mousemove",uploader_move);
+            resizeable = false;
+        })
     },1000*25);
 }
 
