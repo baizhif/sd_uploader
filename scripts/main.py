@@ -82,6 +82,24 @@ async def dataProcess(data:str,ws:WebSocket):
             await ws.send_text("cmd" + info)
 
 manager = ConnectionManager()
+print("当前文件路径",__file__)
+print("当前文件类路径",ConnectionManager.__file__)
+file_path = ConnectionManager.__file__
+# file_path = {
+#     "lora":ConnectionManager.__
+# }
+
+import requests
+def getSrcFileName(url):
+    response = requests.get(url,stream=True)
+    content_disposition = None
+    if response.status_code == 200:
+        content_disposition = response.headers.get('content-disposition')
+        response.close()
+    else:
+        print(url, "获取文件名出错将以url尾部作为名字",response.status_code, response.headers)
+    filename = content_disposition.split('filename="')[1].strip('";') if content_disposition else os.path.basename(url)
+    return filename
 
 def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.websocket("/ws/{ip_addr}")
@@ -106,6 +124,18 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
                     f.write(chunk)
             f.close()
         return {"succeed":[file.filename for file in files]}
+    @app.get("/uploader_tab/api/downloader")
+    async def downloadModelByUrl(request: Request):
+        model_type = request.headers.get("target_model_type")
+        model_url = request.headers.get("target_model_url").strip()
+        if model_type == "custom":
+            model_url,tgt_path = model_url.split(' ')
+        else:
+            tgt_path = ""
+        filename = getSrcFileName(model_url.strip())
+        cmd = f"aria2c --console-log-level=error -q -c -x 16 -s 16 -k 1M {model_url.strip()} -d {tgt_path} -o {filename}"
+        return {"cmd":cmd}
+
 
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
