@@ -85,9 +85,11 @@ function uploaderCraeteElementsAndWait(){
     count_div.style.backgroundColor = uploader_backgroung_color;
     count_div.style.color = fontColor;
 
+    uploader_download_model.style.display = "flex";
     uploader_download_url.style.width = "95%";
     uploader_download_type.style.width = "5%";
-    uploader_download_model.style.backgroundColor = fontColor;
+    uploader_download_model.style.backgroundColor = uploader_backgroung_color;
+    uploader_download_model.style.color = fontColor;
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
