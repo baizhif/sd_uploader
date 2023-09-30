@@ -84,7 +84,7 @@ manager = ConnectionManager()
 extensions_path = __file__.split("/extensions")[0]
 models_path = {
     "lora":os.path.join(extensions_path,"models/Lora"),
-    "checkpoint":os.path.join(extensions_path,"models/Stable-diffusion"),
+    "mainModel":os.path.join(extensions_path,"models/Stable-diffusion"),
 }
 
 import requests
