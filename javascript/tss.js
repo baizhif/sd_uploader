@@ -63,6 +63,7 @@ function uploaderCraeteElementsAndWait(){
     const uploader_download_type_lora = document.createElement("option");
     const uploader_download_type_custom = document.createElement("option");
     uploader_download_type_checkpoint.innerText = "checkpoint"
+    uploader_download_url.placeholder = "输入模型链接"
     uploader_download_type_lora.innerText = "lora"
     uploader_download_type_custom.innerText = "custom"
     uploader_download_type.appendChild(uploader_download_type_checkpoint);
@@ -122,6 +123,7 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.appendChild(uploader_progress_bar_div);
     upload_path_div_main.appendChild(upload_path_div_2);
     upload_path_div_main.appendChild(uploader_run_cmd_output_div);
+    upload_path_div_main.appendChild(uploader_download_model);
 
     function uploaderForUpload(files) {
         if (files.length !== 0) {
