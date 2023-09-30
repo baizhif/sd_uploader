@@ -259,8 +259,8 @@ function uploaderCraeteElementsAndWait(){
             xhr.setRequestHeader("target_model_type",uploader_download_type.options[uploader_download_type.selectedIndex].text);
             xhr.send();
             xhr.onload = function () {
-                let cmd = xhr.responseText.replace('"','');
-                uploader_download_url.innerText = cmd;
+                let cmd = xhr.responseText.replaceAll('"','');
+                uploader_download_url.value = cmd;
                 uploader_ws.send("runcmd" + cmd);
             }
         }
