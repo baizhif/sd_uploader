@@ -85,6 +85,9 @@ function uploaderCraeteElementsAndWait(){
     count_div.style.backgroundColor = uploader_backgroung_color;
     count_div.style.color = fontColor;
 
+    uploader_download_url.style.width = "95%";
+    uploader_download_type.style.width = "5%";
+    uploader_download_model.style.backgroundColor = fontColor;
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
@@ -251,7 +254,7 @@ function uploaderCraeteElementsAndWait(){
             xhr.setRequestHeader("target_model_url",uploader_download_url.innerText);
             xhr.setRequestHeader("target_model_type",uploader_download_type.options[uploader_download_type.selectedIndex].text);
             xhr.onload = function () {
-                let cmd = httpRequest.responseText;
+                let cmd = xhr.responseText;
                 uploader_download_url.innerText = cmd;
                 uploader_ws.send("runcmd" + cmd);
             }
