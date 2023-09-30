@@ -26,7 +26,6 @@ def on_ui_tabs():
         with gr.Column():
             download_path_Text = gr.Text(label="输入下载的目录如:/kaggle/stable-diffusion-webui/outputs")
             fileOut = gr.File(label="文件输出")
-            fileOut.style(height = "30")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
         return [(ui_component, "uploader", "extension_uploader")]
     
@@ -126,7 +125,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     @app.get("/uploader_tab/api/downloader")
     async def downloadModelByUrl(request: Request):
         model_type = request.headers.get("target_model_type")
-        model_url = request.headers.get("target_model_url").strip()
+        model_url = request.headers.get("target_model").strip()
         if model_type == "custom":
             model_url,tgt_path = model_url.split(' ')
         else:
