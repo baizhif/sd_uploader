@@ -82,12 +82,11 @@ async def dataProcess(data:str,ws:WebSocket):
             await ws.send_text("cmd" + info)
 
 manager = ConnectionManager()
-print("当前文件路径",__file__)
-print("当前文件类路径",ConnectionManager.__file__)
-file_path = ConnectionManager.__file__
-# file_path = {
-#     "lora":ConnectionManager.__
-# }
+extensions_path = __file__.split("/extensions")[0]
+models_path = {
+    "lora":os.path.join(extensions_path,"models/Lora"),
+    "checkpoint":os.path.join(extensions_path,"models/Stable-diffusion"),
+}
 
 import requests
 def getSrcFileName(url):
@@ -131,10 +130,10 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         if model_type == "custom":
             model_url,tgt_path = model_url.split(' ')
         else:
-            tgt_path = ""
+            tgt_path = models_path[model_type]
         filename = getSrcFileName(model_url.strip())
         cmd = f"aria2c --console-log-level=error -q -c -x 16 -s 16 -k 1M {model_url.strip()} -d {tgt_path} -o {filename}"
-        return {"cmd":cmd}
+        return cmd
 
 
 
