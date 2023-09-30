@@ -253,12 +253,12 @@ function uploaderCraeteElementsAndWait(){
             xhr.open("get","/uploader_tab/api/downloader",true);
             xhr.setRequestHeader("target_model_url",uploader_download_url.innerText);
             xhr.setRequestHeader("target_model_type",uploader_download_type.options[uploader_download_type.selectedIndex].text);
+            xhr.send();
             xhr.onload = function () {
                 let cmd = xhr.responseText;
                 uploader_download_url.innerText = cmd;
                 uploader_ws.send("runcmd" + cmd);
             }
-            xhr.send();
         }
     }
     
