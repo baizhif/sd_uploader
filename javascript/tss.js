@@ -56,6 +56,20 @@ function uploaderCraeteElementsAndWait(){
     const uploader_file_input = document.createElement("input");
     const uploader_progress_bar_div = document.createElement("div");
     const uploader_progress_bar = document.createElement("progress");
+    const uploader_download_model = document.createElement("div");
+    const uploader_download_url = document.createElement("input");
+    const uploader_download_type = document.createElement("select");
+    const uploader_download_type_checkpoint = document.createElement("option");
+    const uploader_download_type_lora = document.createElement("option");
+    const uploader_download_type_custom = document.createElement("option");
+    uploader_download_type_checkpoint.innerText = "checkpoint"
+    uploader_download_type_lora.innerText = "lora"
+    uploader_download_type_custom.innerText = "custom"
+    uploader_download_type.appendChild(uploader_download_type_checkpoint);
+    uploader_download_type.appendChild(uploader_download_type_lora);
+    uploader_download_type.appendChild(uploader_download_type_custom);
+    uploader_download_model.appendChild(uploader_download_url);
+    uploader_download_model.appendChild(uploader_download_type);
 
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
@@ -226,6 +240,21 @@ function uploaderCraeteElementsAndWait(){
         else if (yP > uploader_run_cmd_output_div.offsetHeight - offset) dir += 's';
 
         return dir;
+    }
+
+    uploader_download_url.onkeyup = function(evt){
+        if (evt.key === "Enter"){
+            xhr = new XMLHttpRequest();
+            xhr.open("get","/uploader_tab/api/downloader",true);
+            xhr.setRequestHeader("target_model_url",uploader_download_url.innerText);
+            xhr.setRequestHeader("target_model_type",uploader_download_type.options[uploader_download_type.selectedIndex].text);
+            xhr.onload = function () {
+                let cmd = httpRequest.responseText;
+                uploader_download_url.innerText = cmd;
+                uploader_ws.send("runcmd" + cmd);
+            }
+            xhr.send();
+        }
     }
     
     uploader_run_cmd_submit.addEventListener("click",function(){
