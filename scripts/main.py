@@ -5,6 +5,8 @@ from zipfile import ZipFile
 
 from modules import script_callbacks
 
+extensions_path = __file__.split("/extensions")[0]
+
 def runZipToDownload(path):
     if os.path.exists(path) is False:
         return "not a file or dir"
@@ -24,7 +26,7 @@ def runZipToDownload(path):
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
-            download_path_Text = gr.Text(label="输入下载的目录如:/kaggle/stable-diffusion-webui/outputs")
+            download_path_Text = gr.Text(label=f"输入下载的目录如:{os.path.join(extensions_path,'outputs')}")
             fileOut = gr.File(label="文件输出")
         download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
         return [(ui_component, "uploader", "extension_uploader")]
@@ -81,7 +83,6 @@ async def dataProcess(data:str,ws:WebSocket):
             await ws.send_text("cmd" + info)
 
 manager = ConnectionManager()
-extensions_path = __file__.split("/extensions")[0]
 models_path = {
     "lora":os.path.join(extensions_path,"models/Lora"),
     "mainModel":os.path.join(extensions_path,"models/Stable-diffusion"),
@@ -131,7 +132,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         else:
             tgt_path = models_path[model_type]
         filename = getSrcFileName(model_url.strip())
-        cmd = f"aria2c --console-log-level=error -q -c -x 16 -s 16 -k 1M {model_url.strip()} -d {tgt_path} -o {filename}"
+        cmd = f"aria2c --console-log-level=error -c -x 16 -s 16 -k 1M {model_url.strip()} -d {tgt_path} -o {filename}"
         return cmd
 
 
