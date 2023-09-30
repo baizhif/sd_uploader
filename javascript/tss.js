@@ -62,8 +62,8 @@ function uploaderCraeteElementsAndWait(){
     const uploader_download_type_checkpoint = document.createElement("option");
     const uploader_download_type_lora = document.createElement("option");
     const uploader_download_type_custom = document.createElement("option");
-    uploader_download_type_checkpoint.innerText = "checkpoint"
     uploader_download_url.placeholder = "输入模型链接"
+    uploader_download_type_checkpoint.innerText = "mainModel"
     uploader_download_type_lora.innerText = "lora"
     uploader_download_type_custom.innerText = "custom"
     uploader_download_type.appendChild(uploader_download_type_checkpoint);
@@ -88,8 +88,10 @@ function uploaderCraeteElementsAndWait(){
     uploader_download_model.style.display = "flex";
     uploader_download_url.style.width = "95%";
     uploader_download_type.style.width = "5%";
-    uploader_download_model.style.backgroundColor = uploader_backgroung_color;
-    uploader_download_model.style.color = fontColor;
+    uploader_download_url.style.backgroundColor = uploader_backgroung_color;
+    uploader_download_type.style.backgroundColor = uploader_backgroung_color;
+    uploader_download_url.style.color = fontColor;
+    uploader_download_type.style.color = fontColor;
     upload_path_div_1.style.display = "flex";
     upload_path_div_main.style.justifyContent = "space-between";
     upload_path_div_1.style.width = "100%";
@@ -257,7 +259,7 @@ function uploaderCraeteElementsAndWait(){
             xhr.setRequestHeader("target_model_type",uploader_download_type.options[uploader_download_type.selectedIndex].text);
             xhr.send();
             xhr.onload = function () {
-                let cmd = xhr.responseText;
+                let cmd = xhr.responseText.replace('"','');
                 uploader_download_url.innerText = cmd;
                 uploader_ws.send("runcmd" + cmd);
             }
