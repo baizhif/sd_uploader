@@ -251,7 +251,7 @@ function uploaderCraeteElementsAndWait(){
         if (evt.key === "Enter"){
             xhr = new XMLHttpRequest();
             xhr.open("get","/uploader_tab/api/downloader",true);
-            // xhr.setRequestHeader("target_model_url",uploader_download_url.value);
+            xhr.setRequestHeader("target_model",uploader_download_url.value);
             xhr.setRequestHeader("target_model_type",uploader_download_type.options[uploader_download_type.selectedIndex].text);
             xhr.send();
             xhr.onload = function () {
