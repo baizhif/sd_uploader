@@ -9,7 +9,8 @@ extensions_path = __file__.split("/extensions")[0]
 
 def runZipToDownload(path):
     if os.path.exists(path) is False:
-        return "not a file or dir"
+        yield "not a file or dir"
+        return
     path = path.strip()
     if os.path.isdir(path):
         filein = os.path.join('./',os.path.basename(path) + ".zip")
@@ -17,18 +18,20 @@ def runZipToDownload(path):
         for path, _, filenames in os.walk(path):
             fpath = path.replace(path, '')
             for filename in filenames:
+                yield os.path.join(path,filename)
                 zip.write(os.path.join(path, filename), os.path.join(fpath, filename))
         zip.close()
     else:
         filein = path
-    return filein
+    yield "文件位于: " + filein
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
-            download_path_Text = gr.Text(label=f"输入下载的目录如:{os.path.join(extensions_path,'outputs')}")
-            fileOut = gr.File(label="文件输出")
-        download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
+        #     download_path_Text = gr.Text(label=f"输入下载的目录如:{os.path.join(extensions_path,'outputs')}")
+        #     fileOut = gr.File(label="文件输出")
+        # download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
+            pass
         return [(ui_component, "uploader", "extension_uploader")]
     
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect,UploadFile,Request,File
@@ -80,12 +83,22 @@ async def dataProcess(data:str,ws:WebSocket):
     if data.startswith("runcmd"):
         cmd = data[6:].strip()
         for info in someMethods.runcmd(cmd):
+            await ws.send_text(("cmd" + info).strip())
+        await ws.send_text("finshed")
+    elif data.startswith("zipOutputs"):
+        path = data[10:].strip()
+        for info in runZipToDownload(path):
             await ws.send_text("cmd" + info)
+
 
 manager = ConnectionManager()
 models_path = {
-    "lora":os.path.join(extensions_path,"models/Lora"),
-    "mainModel":os.path.join(extensions_path,"models/Stable-diffusion"),
+    "Lora":os.path.join(extensions_path,"models/Lora"),
+    "MainModel":os.path.join(extensions_path,"models/Stable-diffusion"),
+    "VAE":os.path.join(extensions_path,"models/VAE"),
+    "Controlnet":os.path.join(extensions_path,"extensions/sd-webui-controlnet/models"),
+    "Embeddings":os.path.join(extensions_path,"embeddings"),
+    "ESRGAN":os.path.join(extensions_path,"models/ESRGAN"),
 }
 
 import requests
@@ -127,15 +140,13 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
     async def downloadModelByUrl(request: Request):
         model_type = request.headers.get("target_model_type")
         model_url = request.headers.get("target_model").strip()
-        if model_type == "custom":
+        if model_type == "Custom":
             model_url,tgt_path = model_url.split(' ')
         else:
             tgt_path = models_path[model_type]
         filename = getSrcFileName(model_url.strip())
         cmd = f"aria2c --console-log-level=error -c -x 16 -s 16 -k 1M {model_url.strip()} -d {tgt_path} -o {filename}"
         return cmd
-
-
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
 script_callbacks.on_app_started(on_app_started)
