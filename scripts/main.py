@@ -89,6 +89,8 @@ async def dataProcess(data:str,ws:WebSocket):
         path = data[10:].strip()
         for info in runZipToDownload(path):
             await ws.send_text("cmd" + info)
+    elif data == "getOutputsPath":
+        await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
 
 
 manager = ConnectionManager()
