@@ -38,15 +38,16 @@ function new_uploader_ws(client_url) {
         if (evt.data.startsWith("finshed")) {
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + "\n\n" + uploader_run_cmd.value;
             uploader_run_cmd.value = "";
-        }
-        else if (evt.data.startsWith("cmd")) {
-            let data = vt.data.slice(3);
+        }else if (evt.data.startsWith("cmd")) {
+            let data = evt.data.slice(3);
             if (data.startsWith("文件位于: ")) {
                 file_url = host + "file=" + data.slice(6)
                 data = "文件位于:" + file_url
             }
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + data + "\n";
             uploader_run_cmd_output_div.style.display = "block";
+        }else if (evt.data.startsWith("outputs_path:")) {
+            uploader_download_file.value = evt.data.slice(13);
         }else{
             count_div.innerText = evt.data;
         }
@@ -172,14 +173,8 @@ function uploaderCraeteElementsAndWait(){
     }
 
     function getOutputPath(){
-        xhr = new XMLHttpRequest();
-        xhr.open("get","/uploader_tab/api/output");
-        xhr.send();
-        xhr.onload = function() {
-            path = xhr.responseText.replaceAll('"','');
-            uploader_download_file.value = path;
+        path = uploader_ws.send("getOutputsPath");
         }
-    }
 
     function uploaderForUpload(files) {
         if (files.length !== 0) {
