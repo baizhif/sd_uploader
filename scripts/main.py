@@ -13,14 +13,16 @@ def runZipToDownload(path):
         return
     path = path.strip()
     if os.path.isdir(path):
-        filein = os.path.join(extensions_path,"temp/" + os.path.basename(path) + ".zip")
+        tgt_folder = os.path.join(extensions_path,"temp")
+        if os.path.exists is False:
+            os.makedirs(tgt_folder)
+        filein = os.path.join(tgt_folder, os.path.basename(path) + ".zip")
         zip = ZipFile(filein, "w", 8)
-        for root, _, filenames in os.walk(path):
+        for path, _, filenames in os.walk(path):
             fpath = path.replace(path, '')
             for filename in filenames:
-                print(os.path.join(fpath, filename))
-                yield os.path.join(root,filename)
-                zip.write(os.path.join(root, filename), os.path.join(fpath, filename))
+                yield os.path.join(path,filename)
+                zip.write(os.path.join(path, filename), os.path.join(fpath, filename))
         zip.close()
     else:
         filein = path
@@ -91,7 +93,7 @@ async def dataProcess(data:str,ws:WebSocket):
         elif data == "getOutputsPath":
             await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
     except Exception as e:
-        await ws.send_text("cmd出错了" + str(e))
+        await ws.send_text("出错了" + str(e))
 manager = ConnectionManager()
 models_path = {
     "Lora":os.path.join(extensions_path,"models/Lora"),
