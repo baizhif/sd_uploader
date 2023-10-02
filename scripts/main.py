@@ -69,7 +69,7 @@ class someMethods:
                 os.chdir(cmd[2:].strip())
                 yield f"wkdir{cmd[2:].strip()}"
             else:
-                yield "the " + cmd[2:].strip() + " dir not found! check your input.\n"
+                yield "the " + cmd[2:].strip() + " dir not found! check your input."
             return
         p = subprocess.Popen(cmd, shell = True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         for info in iter(p.stdout.readline, b''):
@@ -88,7 +88,6 @@ async def dataProcess(data:str,ws:WebSocket):
             ws.send_text("cmd" + info)
     elif data == "getOutputsPath":
         await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
-
 
 manager = ConnectionManager()
 models_path = {
