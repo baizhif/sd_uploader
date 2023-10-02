@@ -14,7 +14,7 @@ def runZipToDownload(path):
     path = path.strip()
     if os.path.isdir(path):
         tgt_folder = os.path.join(extensions_path,"temp")
-        if os.path.exists is False:
+        if os.path.exists(path) is False:
             os.makedirs(tgt_folder)
         filein = os.path.join(tgt_folder, os.path.basename(path) + ".zip")
         zip = ZipFile(filein, "w", 8)
@@ -87,13 +87,13 @@ async def dataProcess(data:str,ws:WebSocket):
                 await ws.send_text(("cmd" + info).strip())
             await ws.send_text("finshed")
         elif data.startswith("zipOutputs"):
-            path = data[10:].strip()
+            path = data[10:]
             for info in runZipToDownload(path):
                 await ws.send_text("cmd" + info)
         elif data == "getOutputsPath":
             await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
     except Exception as e:
-        await ws.send_text("出错了" + str(e))
+        await ws.send_text("cmd出错了" + str(e))
 manager = ConnectionManager()
 models_path = {
     "Lora":os.path.join(extensions_path,"models/Lora"),
