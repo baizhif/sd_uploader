@@ -1,8 +1,8 @@
 const protocol = window.location.protocol;
 const uploader_ws_url = `${protocol === "https:" ? "wss:" : "ws:"}//${window.location.host}/ws`;
 let uploader_ws;
-
-let count_div = document.createElement("div")
+const host = window.location.protocol + "//" + window.location.host;
+let count_div = document.createElement("div");
 
 function getPublicIp(){
     var httpRequest = new XMLHttpRequest();
@@ -35,8 +35,17 @@ function new_uploader_ws(client_url) {
         reconnect();
     }
     uploader_ws.onmessage = function(evt) {
-        if (evt.data.startsWith("cmd")) {
-            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + evt.data.slice(3);
+        if (evt.data.startsWith("finshed")) {
+            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + "\n\n" + uploader_run_cmd.value;
+            uploader_run_cmd.value = "";
+        }
+        else if (evt.data.startsWith("cmd")) {
+            let data = vt.data.slice(3);
+            if (data.startsWith("文件位于: ")) {
+                file_url = host + "file=" + data.slice(6)
+                data = "文件位于:" + file_url
+            }
+            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + data + "\n";
             uploader_run_cmd_output_div.style.display = "block";
         }else{
             count_div.innerText = evt.data;
@@ -44,13 +53,14 @@ function new_uploader_ws(client_url) {
         
     }
 }
+const uploader_download_file = document.createElement("input");
+const uploader_run_cmd = document.createElement("input");
 const uploader_run_cmd_output_div = document.createElement("div");
 function uploaderCraeteElementsAndWait(){
     const upload_path_div_main = document.createElement("div");
     const upload_path_div_1 = document.createElement("div");
     const upload_path_div_2 = document.createElement("div");
     const uploade_path_text = document.createElement("input");
-    const uploader_run_cmd = document.createElement("input");
     const uploader_run_cmd_submit = document.createElement("button")
     const uploader_file_button = document.createElement("button");
     const uploader_file_input = document.createElement("input");
@@ -61,17 +71,34 @@ function uploaderCraeteElementsAndWait(){
     const uploader_download_type = document.createElement("select");
     const uploader_download_type_checkpoint = document.createElement("option");
     const uploader_download_type_lora = document.createElement("option");
+    const uploader_download_type_VAE = document.createElement("option");
+    const uploader_download_type_controlnet = document.createElement("option");
+    const uploader_download_type_embeddings = document.createElement("option");
+    const uploader_download_type_ESRGAN = document.createElement("option");
     const uploader_download_type_custom = document.createElement("option");
-    uploader_download_url.placeholder = "输入模型链接"
-    uploader_download_type_checkpoint.innerText = "mainModel"
-    uploader_download_type_lora.innerText = "lora"
-    uploader_download_type_custom.innerText = "custom"
+    const uploader_download_file_div = document.createElement("div");
+
+    uploader_download_file.placeholder = "输入下载路径";
+    uploader_download_url.placeholder = "输入模型链接";
+    uploader_download_type_checkpoint.innerText = "MainModel";
+    uploader_download_type_lora.innerText = "Lora";
+    uploader_download_type_VAE.innerText = "VAE";
+    uploader_download_type_controlnet.innerText = "Controlnet";
+    uploader_download_type_embeddings.innerText = "Embeddings";
+    uploader_download_type_ESRGAN.innerText = "ESRGAN";
+    uploader_download_type_custom.innerText = "Custom";
+    uploader_download_file_div.appendChild(uploader_download_file);
     uploader_download_type.appendChild(uploader_download_type_checkpoint);
     uploader_download_type.appendChild(uploader_download_type_lora);
+    uploader_download_type.appendChild(uploader_download_type_VAE);
+    uploader_download_type.appendChild(uploader_download_type_controlnet);
+    uploader_download_type.appendChild(uploader_download_type_embeddings);
+    uploader_download_type.appendChild(uploader_download_type_ESRGAN);
     uploader_download_type.appendChild(uploader_download_type_custom);
     uploader_download_model.appendChild(uploader_download_url);
     uploader_download_model.appendChild(uploader_download_type);
 
+    uploader_download_file.type = "text";
     uploader_run_cmd.placeholder = "输入要执行的命令"
     uploade_path_text.type = "text";
     uploader_run_cmd.type = "text";
@@ -82,9 +109,14 @@ function uploaderCraeteElementsAndWait(){
     uploader_file_input.multiple = "multiple";
     uploader_file_input.id = "uploader_file_input";
     uploader_file_button.innerText = "上传";
+    uploader_download_url.type = "text";
     count_div.style.backgroundColor = uploader_backgroung_color;
     count_div.style.color = fontColor;
 
+    uploader_download_file.style.backgroundColor = backgroundColor;
+    uploader_download_file.style.color = fontColor;
+    uploader_download_file.style.display = "flex";
+    uploader_download_file.style.width = "100%";
     uploader_download_model.style.display = "flex";
     uploader_download_url.style.width = "95%";
     uploader_download_type.style.width = "5%";
@@ -131,6 +163,23 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.appendChild(upload_path_div_2);
     upload_path_div_main.appendChild(uploader_run_cmd_output_div);
     upload_path_div_main.appendChild(uploader_download_model);
+    upload_path_div_main.appendChild(uploader_download_file_div);
+
+    uploader_download_file.onkeyup = function(evt){
+        if (evt.key == 'Enter') {
+            uploader_ws.send("zipOutputs" + uploader_download_file.value);
+        }
+    }
+
+    function getOutputPath(){
+        xhr = new XMLHttpRequest();
+        xhr.open("get","/uploader_tab/api/output");
+        xhr.send();
+        xhr.onload = function() {
+            path = xhr.responseText.replaceAll('"','');
+            uploader_download_file.value = path;
+        }
+    }
 
     function uploaderForUpload(files) {
         if (files.length !== 0) {
@@ -278,6 +327,7 @@ function uploaderCraeteElementsAndWait(){
     
     let uploader_tab;
     setTimeout(function() {
+        getOutputPath()
         document.body.appendChild(count_div)
         uploader_tab = document.getElementById("tab_extension_uploader");
         uploader_tab.insertBefore(upload_path_div_main,uploader_tab.children[0]);
