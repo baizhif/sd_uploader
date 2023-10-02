@@ -168,9 +168,9 @@ function uploaderCraeteElementsAndWait(){
     upload_path_div_main.appendChild(upload_path_div_1);
     upload_path_div_main.appendChild(uploader_progress_bar_div);
     upload_path_div_main.appendChild(upload_path_div_2);
-    upload_path_div_main.appendChild(uploader_run_cmd_output_div);
     upload_path_div_main.appendChild(uploader_download_model);
     upload_path_div_main.appendChild(uploader_download_file_div);
+    upload_path_div_main.appendChild(uploader_run_cmd_output_div);
 
     uploader_download_file.onkeyup = function(evt){
         if (evt.key == 'Enter') {
