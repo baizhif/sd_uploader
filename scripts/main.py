@@ -14,7 +14,7 @@ def runZipToDownload(path):
     path = path.strip()
     if os.path.isdir(path):
         tgt_folder = os.path.join(extensions_path,"temp")
-        if os.path.exists(path) is False:
+        if os.path.exists(tgt_folder) is False:
             os.makedirs(tgt_folder)
         filein = os.path.join(tgt_folder, os.path.basename(path) + ".zip")
         zip = ZipFile(filein, "w", 8)
