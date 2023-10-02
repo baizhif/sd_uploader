@@ -77,20 +77,20 @@ class someMethods:
         
 
 async def dataProcess(data:str,ws:WebSocket):
-    if data.startswith("runcmd"):
-        cmd = data[6:].strip()
-        for info in someMethods.runcmd(cmd):
-            await ws.send_text(("cmd" + info).strip())
-        await ws.send_text("finshed")
-    elif data.startswith("zipOutputs"):
-        path = data[10:].strip()
-        print(path)
-        for info in runZipToDownload(path):
-            print(info)
-            await ws.send_text("cmd" + info)
-    elif data == "getOutputsPath":
-        await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
-
+    try:
+        if data.startswith("runcmd"):
+            cmd = data[6:].strip()
+            for info in someMethods.runcmd(cmd):
+                await ws.send_text(("cmd" + info).strip())
+            await ws.send_text("finshed")
+        elif data.startswith("zipOutputs"):
+            path = data[10:].strip()
+            for info in runZipToDownload(path):
+                await ws.send_text("cmd" + info)
+        elif data == "getOutputsPath":
+            await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
+    except Exception as e:
+        ws.send_text("出错了" + str(e))
 manager = ConnectionManager()
 models_path = {
     "Lora":os.path.join(extensions_path,"models/Lora"),
