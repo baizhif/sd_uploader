@@ -90,7 +90,7 @@ async def dataProcess(data:str,ws:WebSocket):
         elif data == "getOutputsPath":
             await ws.send_text("outputs_path:"+ os.path.join(extensions_path,'outputs'))
     except Exception as e:
-        ws.send_text("出错了" + str(e))
+        await ws.send_text("cmd出错了" + str(e))
 manager = ConnectionManager()
 models_path = {
     "Lora":os.path.join(extensions_path,"models/Lora"),
