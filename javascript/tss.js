@@ -42,6 +42,7 @@ function new_uploader_ws(client_url) {
             let data = evt.data.slice(3);
             if (data.startsWith("文件位于: ")) {
                 file_url = host + "/file=" + data.slice(6)
+                window.open(file_url);
                 data = "文件位于:" + file_url
             }
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + data + "\n";
@@ -59,7 +60,7 @@ const uploader_run_cmd = document.createElement("input");
 const uploader_run_cmd_output_div = document.createElement("div");
 
 function download_tgt_file(url){
-    
+
 }
 
 function uploaderCraeteElementsAndWait(){
