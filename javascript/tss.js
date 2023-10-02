@@ -36,14 +36,14 @@ function new_uploader_ws(client_url) {
     }
     uploader_ws.onmessage = function(evt) {
         if (evt.data.startsWith("finshed")) {
-            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + "\n\n" + uploader_run_cmd.value;
+            uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + "\n" + uploader_run_cmd.value + "\n";
             uploader_run_cmd.value = "";
         }else if (evt.data.startsWith("cmd")) {
             let data = evt.data.slice(3);
             if (data.startsWith("文件位于: ")) {
                 file_url = host + "/file=" + data.slice(6)
-                window.open(file_url);
                 data = "文件位于:" + file_url
+                window.open(file_url);
             }
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + data + "\n";
             uploader_run_cmd_output_div.style.display = "block";
@@ -218,6 +218,7 @@ function uploaderCraeteElementsAndWait(){
             if (uploader_run_cmd.value === "clear" || uploader_run_cmd.value === "cls"){
                 uploader_run_cmd_output_div.innerText = "";
                 uploader_run_cmd_output_div.style.display = "none";
+                uploader_run_cmd.value = "";
                 return;
             }
             uploader_ws.send("runcmd" + uploader_run_cmd.value)
