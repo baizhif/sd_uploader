@@ -41,7 +41,7 @@ function new_uploader_ws(client_url) {
         }else if (evt.data.startsWith("cmd")) {
             let data = evt.data.slice(3);
             if (data.startsWith("文件位于: ")) {
-                file_url = host + "file=" + data.slice(6)
+                file_url = host + "/file=" + data.slice(6)
                 data = "文件位于:" + file_url
             }
             uploader_run_cmd_output_div.innerText = uploader_run_cmd_output_div.innerText + data + "\n";
@@ -57,6 +57,11 @@ function new_uploader_ws(client_url) {
 const uploader_download_file = document.createElement("input");
 const uploader_run_cmd = document.createElement("input");
 const uploader_run_cmd_output_div = document.createElement("div");
+
+function download_tgt_file(url){
+    
+}
+
 function uploaderCraeteElementsAndWait(){
     const upload_path_div_main = document.createElement("div");
     const upload_path_div_1 = document.createElement("div");
