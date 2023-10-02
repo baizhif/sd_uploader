@@ -9,11 +9,11 @@ extensions_path = __file__.split("/extensions")[0]
 
 def runZipToDownload(path):
     if os.path.exists(path) is False:
-        yield "not a file or dir"
+        yield "下载路径既不是文件也不是目录"
         return
     path = path.strip()
     if os.path.isdir(path):
-        filein = os.path.join('./',os.path.basename(path) + ".zip")
+        filein = os.path.join(extensions_path,"temp/" + os.path.basename(path) + ".zip")
         zip = ZipFile(filein, "w", 8)
         for path, _, filenames in os.walk(path):
             fpath = path.replace(path, '')
@@ -28,9 +28,6 @@ def runZipToDownload(path):
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as ui_component:
         with gr.Column():
-        #     download_path_Text = gr.Text(label=f"输入下载的目录如:{os.path.join(extensions_path,'outputs')}")
-        #     fileOut = gr.File(label="文件输出")
-        # download_path_Text.submit(fn=runZipToDownload,inputs=[download_path_Text],outputs=fileOut)
             pass
         return [(ui_component, "uploader", "extension_uploader")]
     
