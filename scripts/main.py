@@ -84,6 +84,7 @@ async def dataProcess(data:str,ws:WebSocket):
         await ws.send_text("finshed")
     elif data.startswith("zipOutputs"):
         path = data[10:].strip()
+        print(path)
         for info in runZipToDownload(path):
             print(info)
             await ws.send_text("cmd" + info)
