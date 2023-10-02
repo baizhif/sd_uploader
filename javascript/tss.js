@@ -113,7 +113,7 @@ function uploaderCraeteElementsAndWait(){
     count_div.style.backgroundColor = uploader_backgroung_color;
     count_div.style.color = fontColor;
 
-    uploader_download_file.style.backgroundColor = backgroundColor;
+    uploader_download_file.style.backgroundColor = uploader_backgroung_color;
     uploader_download_file.style.color = fontColor;
     uploader_download_file.style.display = "flex";
     uploader_download_file.style.width = "100%";
