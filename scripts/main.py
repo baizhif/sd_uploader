@@ -148,7 +148,7 @@ def on_app_started(_: gr.Blocks, app: FastAPI) -> None:
         else:
             tgt_path = models_path[model_type]
         filename = getSrcFileName(model_url.strip())
-        cmd = f"aria2c --console-log-level=error -c -x 16 -s 16 -k 1M {model_url.strip()} -d {tgt_path} -o {filename}"
+        cmd = f"aria2c --console-log-level=error -c -x 16 -s 16 -k 1M '{model_url.strip()}' -d '{tgt_path}' -o '{filename}'"
         return cmd
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
